@@ -1,0 +1,55 @@
+# Internal / AI config
+CLAUDE.md
+PRD.md
+INSIGHTS.md
+.planning/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Next.js
+.next/
+out/
+tsconfig.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.production.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files
+data/raw/
+data/processed/
+
+# Neo4j local volumes
+neo4j_data/
+neo4j_logs/
+
+# Large media (keep .gif for README)
+media/*.mov
+media/*.heic
+
+# Auto-generated
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Python
+.ruff_cache/
+.pytest_cache/
+dist/
+build/
+*.egg-info/

@@ -33,7 +33,7 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
               Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions.
             </li>
             <li>
-              <strong>News tagging.</strong> Recent coverage matched by exact firm name to verified scandal firms, each
+              <strong>News tagging.</strong> Recent coverage matched by exact firm name to the firms named in the flood-control reporting, each
               linking its source article.
             </li>
           </ul>
@@ -46,8 +46,8 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
             each firm to its DPWH id (or a normalized name when no id is present), collapsing {num(stats.totals.contracts)} contract
             rows to <strong>{num(stats.totals.contractors)} distinct firms</strong>. Joint ventures become recorded co-award
             edges. For example, the {stats.revoked.contracts.toLocaleString()} contracts tagged &quot;[REVOKED]&quot; resolve
-            to just <strong>{stats.revoked.firms} firms</strong> ({peso(stats.revoked.value)}), not the 256 raw strings a
-            naive count returns.
+            to just <strong>{stats.revoked.firms} firms</strong> ({peso(stats.revoked.value)}). A naive count of the raw
+            strings would report 256.
           </p>
         </Card>
 
@@ -55,14 +55,14 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
           <p>An inferred link never looks like a recorded one.</p>
           <ul>
             <li><strong>Recorded</strong> (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.</li>
-            <li><strong>Inferred from records</strong> (curved, lighter): computed, not stated, such as two firms that are both top awardees in the same district offices.</li>
+            <li><strong>Inferred from records</strong> (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.</li>
             <li><strong>Possible namesake</strong> (faintest): a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.</li>
           </ul>
         </Card>
 
         <Card title="The numbers">
           <p>
-            Node size is the recorded flood-control contract value, not an importance score. Concentration uses the
+            Node size is not an importance score, but the recorded flood-control contract value. Concentration uses the
             Herfindahl-Hirschman Index per district office; {stats.concentration.concentrated_fc_deos} flood-control offices exceed
             2,500 (the US DOJ &quot;highly concentrated&quot; threshold). Brokerage (betweenness), influence (PageRank), and
             co-award communities (Louvain, {stats.communities} groups) are computed offline with networkx and baked into the graph.

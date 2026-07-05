@@ -34,16 +34,16 @@
     {"body": "Department of Justice (DOJ)", "role": "Immigration lookout and prosecution support", "period": "2025-09 onward", "note": "Issued lookout bulletin orders covering 43 officials and contractors.", "source": "doj_ilbo_inq"}
   ],
   "context": {
-    "top15_note": "News reporting and the Marcos administration's own review found that about 15 contractors received roughly PHP 100 billion, near 20% of flood-control program spending. Being a high-volume awardee is a descriptive fact from the records, not an allegation.",
+    "top15_note": "News reporting and the Marcos administration's own review found that about 15 contractors received roughly PHP 100 billion, near 20% of flood-control program spending. Being a high-volume awardee is not an allegation, but a descriptive fact from the records.",
     "top15_source": "scandal_wiki"
   },
   "persons": [
     {"id": "P-discaya-sarah", "name": "Cezarah \"Sarah\" Discaya", "role": "Admitted owner/officer of nine construction firms (Senate testimony, Sept 1, 2025)", "firms": ["31762", "38958", "39196", "40908", "45914", "49129", "52351", "45002", "49128"], "status": "Firms' PCAB licenses revoked (Board Resolution 075, Sept 2025). AMLC froze accounts tied to the family (news-reported).", "sources": ["pcab075_inq", "amlc_gma"]},
     {"id": "P-discaya-curlee", "name": "Pacifico \"Curlee\" Discaya", "role": "Co-owner (spouse) of the Discaya-controlled firms", "firms": ["31762", "38958", "39196"], "status": "Firms' PCAB licenses revoked (Board Resolution 075, Sept 2025).", "sources": ["pcab075_inq"]},
     {"id": "P-co-zaldy", "name": "Elizaldy \"Zaldy\" Co", "role": "Resigned representative; linked to Sunwest, Inc.", "firms": ["15906"], "status": "Charged by the Ombudsman before the Sandiganbayan (graft, malversation), Nov 2025. Reported to have left the country; the Sandiganbayan archived the case in 2026 while he remained at large. Charges are allegations; case unresolved.", "sources": ["sunwest_gma_file", "co_fugitive_gma"]},
-    {"id": "P-villanueva", "name": "Eumir and Pamela Villanueva", "role": "Owners of Topnotch Catalyst Builders Inc.", "firms": ["34061"], "status": "Named on the DOJ immigration lookout bulletin (Sept 2025). A lookout order is investigative, not a charge.", "sources": ["doj_ilbo_inq"]},
+    {"id": "P-villanueva", "name": "Eumir and Pamela Villanueva", "role": "Owners of Topnotch Catalyst Builders Inc.", "firms": ["34061"], "status": "Named on the DOJ immigration lookout bulletin (Sept 2025). A lookout order is not a charge, but an investigative step.", "sources": ["doj_ilbo_inq"]},
     {"id": "P-lubiano", "name": "Lawrence R. Lubiano", "role": "President of Centerways Construction and Development Inc.", "firms": ["34105"], "status": "Reported as the top campaign donor of Senate President Chiz Escudero in 2022. The Comelec cleared both of election-finance liability; Escudero denied any role in the firm's deals. Not an allegation of wrongdoing.", "sources": ["centerways_rappler", "escudero_cleared_rappler"]},
-    {"id": "P-abelido", "name": "Alex H. Abelido", "role": "President of Legacy Construction Corporation", "firms": ["22465"], "status": "Named on the DOJ immigration lookout bulletin (Sept 2025). A lookout order is investigative, not a charge.", "sources": ["doj_ilbo_inq"]},
+    {"id": "P-abelido", "name": "Alex H. Abelido", "role": "President of Legacy Construction Corporation", "firms": ["22465"], "status": "Named on the DOJ immigration lookout bulletin (Sept 2025). A lookout order is not a charge, but an investigative step.", "sources": ["doj_ilbo_inq"]},
     {"id": "P-samidan", "name": "MG Samidan Construction (Samidan family)", "role": "Owner of MG Samidan Construction", "firms": ["33234"], "status": "Subpoenaed by the Senate Blue Ribbon Committee; submitted documents to the ICI. No charge filed as of mid-2026.", "sources": ["senate_subpoena_philstar"]},
     {"id": "P-arevalo", "name": "Mark Allan Arevalo", "role": "Owner of Wawao Builders", "firms": ["46535"], "status": "Firm perpetually disqualified by DPWH for ghost projects (Sept 2025).", "sources": ["wawao_mt"]}
   ],
@@ -90,16 +90,16 @@
       {"type": "blacklisted", "label": "DPWH ordered perpetual disqualification for ghost flood-control projects in Bulacan (DPWH Secretary order).", "status": "recorded", "date": "2025-09-05", "source": "wawao_mt"}
     ]},
     "34061": {"owner": "Eumir and Pamela Villanueva", "actions": [
-      {"type": "flagged_review", "label": "Flagged in a COA fraud audit over a riverbank protection project at Barangay Bulihan, Bulacan (about PHP 69 million). Flagged for review, not a finding of guilt.", "status": "alleged", "date": "2025-11", "source": "topnotch_wiki"},
+      {"type": "flagged_review", "label": "Flagged in a COA fraud audit over a riverbank protection project at Barangay Bulihan, Bulacan (about PHP 69 million). Not a finding of guilt, but flagged for review.", "status": "alleged", "date": "2025-11", "source": "topnotch_wiki"},
       {"type": "lookout_order", "label": "Owners named on the DOJ immigration lookout bulletin order (Sept 2025).", "status": "alleged", "date": "2025-09", "source": "doj_ilbo_inq"},
       {"type": "under_investigation", "label": "Named in news tracking of Ombudsman and ICI referrals arising from the flood-control review; any charge would be an allegation, pending.", "status": "alleged", "date": "2026", "source": "topnotch_cases_rappler"}
     ]},
     "34105": {"owner": "Lawrence R. Lubiano", "actions": [
-      {"type": "political_tie", "label": "Reported as the top campaign donor of Senate President Chiz Escudero in 2022 (about PHP 30 million, near 20% of Escudero's cash contributions). About 96% of the firm's 2021-2024 flood-control projects are in the Bicol region. A campaign donation is a matter of public record, not an allegation of wrongdoing by either party.", "status": "note", "date": "2022", "source": "centerways_rappler"},
+      {"type": "political_tie", "label": "Reported as the top campaign donor of Senate President Chiz Escudero in 2022 (about PHP 30 million, near 20% of Escudero's cash contributions). About 96% of the firm's 2021-2024 flood-control projects are in the Bicol region. A campaign donation is not an allegation of wrongdoing by either party, but a matter of public record.", "status": "note", "date": "2022", "source": "centerways_rappler"},
       {"type": "cleared", "label": "The Comelec cleared both Escudero and Lubiano of election-finance liability; Escudero denied any role in the firm's deals.", "status": "recorded", "date": "2026", "source": "escudero_cleared_rappler"}
     ]},
     "22465": {"owner": "Alex H. Abelido", "actions": [
-      {"type": "lookout_order", "label": "The firm's president was named on the DOJ immigration lookout bulletin order (Sept 2025). A lookout order is investigative, not a charge.", "status": "alleged", "date": "2025-09", "source": "doj_ilbo_inq"},
+      {"type": "lookout_order", "label": "The firm's president was named on the DOJ immigration lookout bulletin order (Sept 2025). A lookout order is not a charge, but an investigative step.", "status": "alleged", "date": "2025-09", "source": "doj_ilbo_inq"},
       {"type": "performance_flag", "label": "President Marcos said initial findings suggested several of the firm's flood-control projects were incomplete or nonexistent; news reporting noted many of its projects were swamped in the July 2025 monsoon.", "status": "alleged", "date": "2025", "source": "samidan_inq"}
     ]},
     "33234": {"owner": "MG Samidan Construction", "actions": [

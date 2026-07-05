@@ -4,7 +4,7 @@ import { Drop, ArrowSquareOut } from "@phosphor-icons/react";
 import ThemeToggle from "@/components/common/ThemeToggle";
 
 const NAV = [
-  { href: "#story", label: "The scandal" },
+  { href: "#story", label: "The record" },
   { href: "#explore", label: "Explore" },
   { href: "#methodology", label: "Methodology" },
 ];
@@ -19,7 +19,7 @@ export default function Header() {
         <a href="#main" className="flex items-center gap-2">
           <Drop size={20} weight="fill" className="text-accent" />
           <span className="font-display text-[17px] font-bold tracking-tight text-text-primary">Paper Trail PH</span>
-          <span className="hidden text-xs text-text-muted sm:inline">· the flood-control money, mapped</span>
+          <span className="hidden text-xs text-text-muted sm:inline">· DPWH flood-control records</span>
         </a>
         <nav className="ml-auto flex items-center gap-1 text-sm" aria-label="Primary">
           {NAV.map((n) => (

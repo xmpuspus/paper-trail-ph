@@ -53,7 +53,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
       body: (
         <>Between 2016 and 2026, DPWH recorded {stats.flood_control.contracts.toLocaleString()} flood-control
         and drainage contracts. By value it is the second-largest infrastructure category in the whole dataset,
-        behind only roads. This map starts there.</>
+        behind only roads.</>
       ),
       figure: { value: peso(stats.flood_control.value), label: "recorded flood-control value", tone: true },
       focus: null,
@@ -70,7 +70,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
     },
     {
       eyebrow: "Concentration",
-      title: "The money pools in a few hands",
+      title: "Twenty district offices with high concentration",
       body: (
         <>In {stats.concentration.concentrated_fc_deos} district engineering offices, one or two firms hold most of
         the flood-control budget: a Herfindahl-Hirschman Index above 2,500, the US Justice Department line for a
@@ -83,7 +83,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
     },
     {
       eyebrow: "The epicenter",
-      title: "Bulacan and the ghost projects",
+      title: "Bulacan, where COA flagged unbuilt projects",
       body: (
         <>Flood-control contracts in Bulacan&apos;s district offices total about ₱102.9 billion. This is where the
         Commission on Audit found projects paid for but unbuilt, and where the top awardees include Wawao Builders
@@ -95,7 +95,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
     },
     {
       eyebrow: "The reach",
-      title: "A few firms, offices nationwide",
+      title: "A few firms across dozens of offices",
       body: (
         <>A handful of contractors do not just win in one place. St. Gerrard Construction appears as a flood-control
         awardee across 96 district offices; St. Timothy across 82; Legacy across 87. In the graph they sit between
@@ -121,7 +121,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
       eyebrow: "The first charges",
       title: "Sunwest and Zaldy Co",
       body: (
-        <>In November 2025 the Ombudsman filed the first criminal charges of the scandal before the Sandiganbayan:
+        <>In November 2025 the Ombudsman filed the first criminal charges in the flood-control case before the Sandiganbayan:
         graft and malversation against company directors and resigned representative Zaldy Co, over a
         ₱289.5-million flood-control project in Oriental Mindoro. Charges are allegations; the case is pending.</>
       ),
@@ -144,7 +144,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
     },
     {
       eyebrow: "What this is",
-      title: "Indicators, not verdicts",
+      title: "Not verdicts, but indicators",
       body: (
         <>Everything here is a public record: a contract, a license status, a court filing, an audit report. The graph
         computes statistical indicators, who co-awards with whom, who won the most, where the money concentrates. It
@@ -175,9 +175,9 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
 
   return (
     <section id="story" className="scroll-mt-24">
-      <p className="eyebrow-muted">The flood-control scandal, beat by beat</p>
+      <p className="eyebrow-muted">Reading the record, in sequence</p>
       <h2 className="mt-2 max-w-2xl text-[28px] font-bold tracking-tight text-text-primary md:text-[38px]">
-        Walk the paper trail
+        What the records show
       </h2>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,440px)_1fr]">
@@ -232,7 +232,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
               />
             </div>
             <p className="mt-3 text-[13px] leading-relaxed text-text-muted">
-              The scandal core: the highest-value flood-control firms, their district offices (squares), and recorded
+              The named firms and the offices they share: the highest-value flood-control firms, their district offices (squares), and recorded
               joint ventures. Node size is the recorded contract value. Colour marks the record on a firm.
             </p>
           </div>

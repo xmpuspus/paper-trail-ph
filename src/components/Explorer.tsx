@@ -123,7 +123,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
         )}
         <button onClick={loadFull} className="btn btn-ghost text-[13px]" aria-pressed={full}>
           {loadingFull ? <CircleNotch size={15} className="animate-spin" /> : <ArrowsOut size={15} />}
-          {full ? "Show scandal core" : `Show full flood-control network (${stats.graph_main_nodes.toLocaleString()} nodes)`}
+          {full ? "Show the named firms" : `Show full flood-control network (${stats.graph_main_nodes.toLocaleString()} nodes)`}
         </button>
         <span className="ml-auto text-xs text-text-muted tabular">
           {displayGraph.nodes.length.toLocaleString()} nodes · {displayGraph.edges.length.toLocaleString()} links

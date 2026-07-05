@@ -24,7 +24,7 @@ export const TIERS: Record<string, TierStyle> = {
   derived: {
     key: "derived",
     label: "Inferred from records",
-    desc: "Computed from the data, not a stated relationship: firms that are both top awardees in the same district offices. Curved, lighter line.",
+    desc: "Not a stated relationship but computed from the data: firms that are both top awardees in the same district offices. Curved, lighter line.",
     cssVar: "--tier-derived",
     curved: true,
     opacity: 0.5,

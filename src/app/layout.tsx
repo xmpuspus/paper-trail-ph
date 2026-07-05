@@ -20,15 +20,15 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Paper Trail PH: the flood-control money, mapped",
+  title: "Paper Trail PH: DPWH flood-control contracts as a graph",
   description:
-    "An interactive graph of DPWH flood-control contracts, the firms that won them, and the official actions and cases on record. Statistical indicators from public records, not accusations.",
+    "An interactive graph of DPWH flood-control contracts, the firms that won them, and the official actions and cases on record, linked to their sources. Not accusations, but statistical indicators from public records.",
   keywords:
     "philippines, DPWH, flood control, procurement, transparency, accountability, contractors, PhilGEPS, public records",
   openGraph: {
-    title: "Paper Trail PH: the flood-control money, mapped",
+    title: "Paper Trail PH: DPWH flood-control contracts as a graph",
     description:
-      "Follow PHP 1.586 trillion in DPWH flood-control contracts across 33,866 projects and the firms that won them.",
+      "PHP 1.586 trillion in DPWH flood-control contracts across 33,866 projects, and the firms that won them.",
     type: "website",
   },
 };

@@ -10,11 +10,11 @@ Paper Trail PH is an interactive graph of every flood-control contract on the DP
 
 The number that stays with me: in 20 district engineering offices, one or two firms hold most of the flood-control budget. That is a Herfindahl-Hirschman Index above 2,500, the same line the US Justice Department uses to call a market highly concentrated. Sunwest, Inc. alone shows ₱32.83 billion in recorded flood-control value.
 
-The point is not to name a villain. It is to make the concentration visible and checkable. Every recorded link, a contract award, a joint venture, a revoked license, a court filing, is a solid line with a source. Anything the graph infers is drawn differently and labeled. Charges are allegations under the presumption of innocence, and each one links to the primary filing.
+The goal is to make the concentration visible and checkable. Every recorded link, a contract award, a joint venture, a revoked license, a court filing, is a solid line with a source. Anything the graph infers is drawn differently and labeled. Charges are allegations under the presumption of innocence, and each one links to the primary filing.
 
 Search Topnotch Catalyst Builders and you get its full DPWH network in one view: 285 contracts, ₱17.41 billion, its district offices, its co-awardees, and the COA fraud-audit flag and DOJ lookout on record, each linked to the source.
 
-The data is CC0 from the DPWH Transparency Portal via BetterGov.PH. The tool computes statistical indicators only, not verdicts. Related work by BetterGov.PH, Rappler, PCIJ, and InfraWatch is credited on the site.
+The data is CC0 from the DPWH Transparency Portal via BetterGov.PH. The tool computes statistical indicators only. It does not issue verdicts. Related work by BetterGov.PH, Rappler, PCIJ, and InfraWatch is credited on the site.
 
 Link in the comments.
 

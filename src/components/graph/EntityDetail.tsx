@@ -76,7 +76,7 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
           <p className="mt-3 text-[11px] leading-relaxed text-text-muted">
             Value is the sum of contract budgets where this{" "}
             {isFirm ? "firm is the sole or a joint awardee" : "district office is the procuring entity"}, 2016–2026.
-            Descriptive statistics from public records; patterns may have legitimate explanations.
+            Descriptive statistics from public records. Patterns may have legitimate explanations.
           </p>
         </Section>
 

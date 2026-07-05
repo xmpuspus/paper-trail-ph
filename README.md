@@ -1,6 +1,6 @@
 # Paper Trail PH
 
-The flood-control money, mapped. An interactive graph of every DPWH flood-control contract on the public record, the firms that won them, and the license revocations, blacklists, and court filings now attached to some of them.
+A graph of every DPWH flood-control contract on the public record, the firms that won them, and the license revocations, blacklists, and court filings now attached to some of them.
 
 **Live:** https://paper-trail-ph.vercel.app
 
@@ -30,7 +30,7 @@ Every figure below is computed from the source data and reconciled across the si
 An inferred link never looks like a recorded one.
 
 - **Recorded** (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.
-- **Inferred from records** (curved, lighter): computed, not stated, such as two firms that are both top awardees in the same district offices.
+- **Inferred from records** (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.
 - **Possible namesake** (faintest): a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.
 
 The scandal overlay (owners, license revocations, charges) is primary-source-or-omit: an entry enters the graph only if it traces to a primary or primary-citing source (PCAB Board Resolution 075, Ombudsman and Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions). Firms without a confirmed action carry recorded facts only. Sources are in `public/data/overlay.json`.
@@ -82,6 +82,6 @@ The interactive graph joining DPWH contracts, officials, court outcomes, and liv
 
 ## What is deferred
 
-Stated plainly, not faked: link prediction (Node2Vec), temporal money-flow, SALN wealth and SOCE campaign-finance joins, and the politician and dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the v1 site.
+Not faked but stated plainly: link prediction (Node2Vec), temporal money-flow, SALN wealth and SOCE campaign-finance joins, and the politician and dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the v1 site.
 
 Not affiliated with any government agency.

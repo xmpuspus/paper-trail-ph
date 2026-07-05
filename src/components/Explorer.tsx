@@ -90,7 +90,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
     <div id="explore" className="scroll-mt-20">
       {/* Search-first */}
       <div className="mb-4">
-        <SearchBox onSelect={(k) => setSelectedKey(k)} entities={entities ?? undefined} />
+        <SearchBox onSelect={(k) => setSelectedKey(k)} entities={entities ?? undefined} overlay={overlay} />
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <span className="text-xs text-text-muted">Jump to:</span>
           {QUICK.map((q) => {

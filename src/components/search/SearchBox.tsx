@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { MagnifyingGlass, CircleNotch } from "@phosphor-icons/react";
-import type { Entity } from "@/lib/types";
+import type { Entity, Overlay } from "@/lib/types";
 import { fetchEntities } from "@/lib/client-data";
+import { buildSearchIndex, searchEntities, type SearchResult } from "@/lib/search";
 import { peso } from "@/lib/format";
 
 interface Props {
   onSelect: (key: string) => void;
   entities?: Entity[];
+  overlay?: Overlay | null;
   autoFocus?: boolean;
 }
 
-export default function SearchBox({ onSelect, entities: provided, autoFocus }: Props) {
+export default function SearchBox({ onSelect, entities: provided, overlay, autoFocus }: Props) {
   const [entities, setEntities] = useState<Entity[] | null>(provided ?? null);
   const [error, setError] = useState(false);
   const [q, setQ] = useState("");
@@ -38,18 +40,16 @@ export default function SearchBox({ onSelect, entities: provided, autoFocus }: P
     return () => clearTimeout(t);
   }, [q]);
 
-  const results = useMemo(() => {
-    if (!entities || !debounced) return [];
-    const needle = debounced.toUpperCase();
-    return entities
-      .filter((e) => e.label.toUpperCase().includes(needle))
-      .sort((a, b) => b.fc_value - a.fc_value || b.value - a.value)
-      .slice(0, 40);
-  }, [entities, debounced]);
+  // Firms + district offices, folded with the sourced overlay so owner names,
+  // the persons named in reporting, and former company names are all searchable.
+  const index = useMemo(() => buildSearchIndex(entities ?? [], overlay ?? null), [entities, overlay]);
+
+  const results = useMemo(() => (debounced ? searchEntities(index, debounced) : []), [index, debounced]);
+  const firstSimilar = results.findIndex((r) => r.similar);
 
   useEffect(() => setActive(0), [debounced]);
 
-  const choose = (e: Entity) => { onSelect(e.key); setQ(""); setDebounced(""); };
+  const choose = (r: SearchResult) => { onSelect(r.entity.key); setQ(""); setDebounced(""); };
 
   const onKeyDown = (ev: React.KeyboardEvent) => {
     if (!results.length) return;
@@ -68,8 +68,8 @@ export default function SearchBox({ onSelect, entities: provided, autoFocus }: P
           autoFocus={autoFocus}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search 6,558 contractors and 220 district offices…"
-          aria-label="Search contractors and district offices"
+          placeholder="Search firms, owners, district offices, and former names…"
+          aria-label="Search firms, owners, district offices, and former names"
           role="combobox"
           aria-expanded={results.length > 0}
           aria-controls={listId}
@@ -89,27 +89,35 @@ export default function SearchBox({ onSelect, entities: provided, autoFocus }: P
       {debounced && (
         <ul id={listId} role="listbox" className="panel custom-scrollbar absolute z-30 mt-1.5 max-h-[340px] w-full overflow-y-auto py-1">
           {results.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-text-muted">No match for &quot;{debounced}&quot;.</li>
+            <li className="px-3 py-2 text-sm text-text-muted">No firm, office, or name matches &quot;{debounced}&quot;.</li>
           ) : (
-            results.map((e, i) => (
-              <li
-                key={e.id}
-                id={`opt-${i}`}
-                role="option"
-                aria-selected={i === active}
-                onMouseEnter={() => setActive(i)}
-                onClick={() => choose(e)}
-                className={`flex cursor-pointer items-baseline gap-3 px-3 py-2 ${i === active ? "bg-surface-2" : ""}`}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm text-text-primary">{e.label}</span>
-                  <span className="text-[11px] text-text-muted">
-                    {e.type === "Contractor" ? "Contractor" : "District office"}
-                    {e.revoked && <span className="ml-2 text-signal">license revoked on record</span>}
+            results.map((r, i) => (
+              <Fragment key={r.entity.id}>
+                {i === firstSimilar && (
+                  <li role="presentation" className="px-3 pb-1 pt-2 text-[11px] uppercase tracking-wide text-text-muted">
+                    Similar
+                  </li>
+                )}
+                <li
+                  id={`opt-${i}`}
+                  role="option"
+                  aria-selected={i === active}
+                  onMouseEnter={() => setActive(i)}
+                  onClick={() => choose(r)}
+                  className={`flex cursor-pointer items-baseline gap-3 px-3 py-2 ${i === active ? "bg-surface-2" : ""}`}
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm text-text-primary">{r.entity.label}</span>
+                    <span className="block truncate text-[11px] text-text-muted">
+                      {r.entity.type === "Contractor" ? "Contractor" : "District office"}
+                      {r.reason?.kind === "name" && <span className="ml-1.5">· matches {r.reason.text}</span>}
+                      {r.reason?.kind === "former" && <span className="ml-1.5">· formerly {r.reason.text}</span>}
+                      {r.entity.revoked && <span className="ml-1.5 text-signal">· license revoked on record</span>}
+                    </span>
                   </span>
-                </span>
-                <span className="tabular shrink-0 text-sm text-text-secondary">{peso(e.fc_value)}</span>
-              </li>
+                  <span className="tabular shrink-0 text-sm text-text-secondary">{peso(r.entity.fc_value)}</span>
+                </li>
+              </Fragment>
             ))
           )}
         </ul>

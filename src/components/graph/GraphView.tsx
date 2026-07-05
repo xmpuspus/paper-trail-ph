@@ -26,7 +26,8 @@ interface LoaderProps {
   onSelect: (key: string | null) => void;
 }
 
-function resolveColors() {
+function resolveColors(theme: string) {
+  const light = theme !== "dark";
   return {
     status: {
       alleged: cssColor("--alert", "#ee6b52"),
@@ -37,9 +38,15 @@ function resolveColors() {
     } as Record<string, string>,
     cat: Array.from({ length: 8 }, (_, i) => cssColor(`--cat-${i + 1}`, "#888")),
     catOther: cssColor("--cat-other", "#888"),
-    // faint edges so the nodes carry the picture, not the mesh
-    tierRecorded: cssColor("--tier-recorded", "#9db2cc") + "4d",
-    tierDerived: cssColor("--tier-derived", "#38b2c4") + "66",
+    // Faint edges so the nodes carry the picture. More opaque in light mode,
+    // where a low alpha washes out against the pale surface.
+    tierRecorded: cssColor("--tier-recorded", "#9db2cc") + (light ? "8c" : "4d"),
+    tierDerived: cssColor("--tier-derived", "#38b2c4") + (light ? "99" : "66"),
+    // The connected edges when a node is focused: strong enough to read.
+    focusEdge: cssColor("--tier-recorded", "#9db2cc") + "e0",
+    // Dimmed non-neighbour nodes: a visible grey in light mode; a faded alpha
+    // in dark mode (a low alpha turns white on a pale surface).
+    dimNode: light ? "#b6bdc6" : null,
     label: cssColor("--graph-label", "#a2b4ca"),
   };
 }
@@ -55,7 +62,7 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
 
   // Build + lay out the graph (rebuilds only when the dataset changes).
   useEffect(() => {
-    const C = resolveColors();
+    const C = resolveColors(theme);
     const graph = new Graph({ multi: false });
     nodeById.current = new Map(data.nodes.map((n) => [n.id, n]));
     keyToId.current = new Map(data.nodes.map((n) => [n.key, n.id]));
@@ -120,7 +127,7 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
   useEffect(() => {
     const graph = sigma.getGraph();
     if (graph.order === 0) return;
-    const C = resolveColors();
+    const C = resolveColors(theme);
     graph.forEachNode((id) => {
       const nt = graph.getNodeAttribute(id, "nodeType") as string;
       const st = graph.getNodeAttribute(id, "statusKey") as string;
@@ -152,6 +159,7 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
   // Selection + hover highlight. Explorer tracks canonical keys; resolve to ids.
   useEffect(() => {
     const graph = sigma.getGraph();
+    const C = resolveColors(theme);
     const selectedId = selected ? keyToId.current.get(selected) ?? null : null;
     const focus = hovered || selectedId;
     sigma.setSetting("nodeReducer", (id, d) => {
@@ -160,18 +168,18 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
       if (focus) {
         if (id === focus) { res.zIndex = 3; res.highlighted = true; }
         else if (graph.areNeighbors(id, focus)) { res.zIndex = 2; }
-        else { res.color = (d.color as string) + "22"; res.label = ""; res.zIndex = 0; }
+        else { res.color = C.dimNode ?? ((d.color as string) + "22"); res.label = ""; res.zIndex = 0; }
       }
       return res;
     });
     sigma.setSetting("edgeReducer", (id, d) => {
       if (!focus) return d;
       const [s, t] = graph.extremities(id);
-      if (s === focus || t === focus) return { ...d, zIndex: 2, size: Math.max((d.size as number) || 0.6, 1.6) };
+      if (s === focus || t === focus) return { ...d, color: C.focusEdge, zIndex: 2, size: Math.max((d.size as number) || 0.6, 2) };
       return { ...d, hidden: true };
     });
     sigma.refresh({ skipIndexation: true });
-  }, [hovered, selected, sigma]);
+  }, [hovered, selected, theme, sigma]);
 
   useEffect(() => {
     registerEvents({

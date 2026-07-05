@@ -2,6 +2,9 @@
 
 Detects coordinated bidding patterns: co-bidding rings, subcontracting
 loops, and contractors sharing registered addresses or officers.
+
+Data source: Computed from real contract data loaded via pipeline.
+All results are derived from graph queries — no hardcoded statistics.
 """
 
 import asyncio

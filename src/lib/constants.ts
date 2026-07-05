@@ -89,65 +89,30 @@ export const EDGE_COLORS: Record<string, string> = {
 export const API_BASE = "/api/v1";
 
 export const DISCLAIMER =
-  "All data shown is from public records. Red flags are statistical indicators that may warrant further investigation — they are not accusations of wrongdoing.";
+  "All data shown is sourced from Philippine public records: DPWH Transparency Portal (transparency.dpwh.gov.ph), PhilGEPS (philgeps.gov.ph), Open Congress PH (open-congress-api.bettergov.ph), PSA (psa.gov.ph), and COA audit reports. Red flags are statistical indicators that may warrant further investigation — they are not accusations of wrongdoing.";
 
 export const SUGGESTED_QUESTIONS = [
-  "What is Golden Dragon Enterprises' connection to the Binay family?",
-  "Which contractors dominate DPWH Region III procurement?",
-  "Are Pacific Roadworks and Golden Dragon co-bidding? Show their bid rotation pattern.",
-  "Show me the circular subcontracting between Pacific Roadworks and Pampanga River Construction",
-  "Is MedPrime Supply Corp a shell company? What's their capital vs contract value?",
-  "How is Metro Star Builders connected to blacklisted Metro Prime Construction?",
-  "Who donated to Mayor Binay's campaign and then won contracts?",
-  "What is the connection between Governor Dy's family and contracts in Makati?",
-  "Show me DPWH Tarlac's contractor concentration — how many bidders compete?",
-  "How has Mayor Binay's declared net worth changed between 2019 and 2023?",
-  "Which agencies have the most COA audit findings?",
-  "Which contractors share directors or addresses? Are any linked to blacklisted companies?",
+  "Which contractors dominate DPWH procurement in a specific region?",
+  "Show me contractors that frequently co-bid on the same projects.",
+  "Which agencies have the highest contractor concentration (HHI)?",
+  "Are there contracts clustering just below the competitive bidding threshold?",
+  "Which contractors operate across the most regions?",
+  "Show me single-bidder contract awards — which agencies have the most?",
+  "Which contractors share directors or registered addresses?",
+  "What are the largest contracts awarded through negotiated procurement?",
+  "Which regions have the lowest project completion rates?",
+  "Show me COA audit findings by agency and severity.",
+  "Which contractors have the highest total contract value?",
+  "Are there contractors linked to blacklist entries?",
 ];
 
-export const INSIGHT_BANNERS = [
-  {
-    text: "Circular subcontracting: P42M flows back to Pacific Roadworks via Pampanga River Construction",
-    query: "Show me the circular subcontracting pattern between Pacific Roadworks and Pampanga River Construction. How much money flows in the circle?",
-    type: "pattern" as const,
-  },
-  {
-    text: "MedPrime Supply Corp: P625K capital, P890M in contracts — ratio 1:1,424",
-    query: "Is MedPrime Supply Corp a shell company? Show me their registered capital vs total contract value.",
-    type: "risk" as const,
-  },
-  {
-    text: "Metro Star Builders shares director and address with blacklisted Metro Prime",
-    query: "How is Metro Star Builders Corp connected to the blacklisted Metro Prime Construction? Do they share directors or addresses?",
-    type: "pattern" as const,
-  },
-  {
-    text: "Golden Dragon donated P5M to Binay campaign, then won P101M in Makati contracts",
-    query: "Who donated to Mayor Binay's campaign and then won contracts from the Makati city government?",
-    type: "risk" as const,
-  },
-  {
-    text: "Cagayan Valley Builders wins in Makati — owners linked to allied governor",
-    query: "What is the connection between Governor Dy's family in Isabela and contracts being won in Makati? Trace the full path.",
-    type: "dynasty" as const,
-  },
-  {
-    text: "DPWH Tarlac: 100% of contracts to one company, all single-bidder",
-    query: "Show me DPWH DEO Tarlac's contractor concentration. How many companies compete for their contracts?",
-    type: "audit" as const,
-  },
-  {
-    text: "Pacific Roadworks and Golden Dragon co-bid 8 times with alternating wins",
-    query: "Are Pacific Roadworks and Golden Dragon Enterprises co-bidding together? Show their bid rotation pattern and win history.",
-    type: "pattern" as const,
-  },
-  {
-    text: "Mayor Binay's declared net worth jumped 3x between SALN filings",
-    query: "How has Mayor Binay's declared net worth changed between 2019 and 2023? Show the SALN timeline.",
-    type: "audit" as const,
-  },
-];
+// Insight banners are populated dynamically from real graph analysis.
+// No hardcoded findings — all insights must come from actual data loaded via the pipeline.
+export const INSIGHT_BANNERS: {
+  text: string;
+  query: string;
+  type: "pattern" | "risk" | "dynasty" | "audit";
+}[] = [];
 
 export const CURRENCY_FORMAT = new Intl.NumberFormat("en-PH", {
   style: "currency",

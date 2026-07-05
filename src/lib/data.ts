@@ -1,0 +1,28 @@
+import fs from "fs";
+import path from "path";
+import type { Stats, GraphData, Overlay, InNews } from "./types";
+
+// Build-time readers: the page is a server component, so these bake the small
+// JSON straight into the static HTML (instant first paint, no fetch, no CLS).
+
+const DATA = path.join(process.cwd(), "public", "data");
+
+function readJson<T>(file: string): T {
+  return JSON.parse(fs.readFileSync(path.join(DATA, file), "utf-8")) as T;
+}
+
+export function getStats(): Stats {
+  return readJson<Stats>("stats.json");
+}
+export function getScandalGraph(): GraphData {
+  return readJson<GraphData>("graph-scandal.json");
+}
+export function getTopnotchGraph(): GraphData {
+  return readJson<GraphData>("graph-topnotch.json");
+}
+export function getOverlay(): Overlay {
+  return readJson<Overlay>("overlay.json");
+}
+export function getInNews(): InNews {
+  return readJson<InNews>("in_news.json");
+}

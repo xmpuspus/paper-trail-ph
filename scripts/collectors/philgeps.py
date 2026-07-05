@@ -1,4 +1,12 @@
-"""PhilGEPS data collector - downloads and parses procurement data."""
+"""PhilGEPS data collector - downloads and parses procurement data.
+
+Data source: PhilGEPS (Philippine Government Electronic Procurement System)
+  - Notices portal: https://notices.philgeps.gov.ph
+  - Open data portal: https://open.philgeps.gov.ph
+  - Alternate: https://data.gov.ph (PhilGEPS datasets)
+Access: Manual XLSX download only (no public API).
+License: Philippine government public records.
+"""
 
 import asyncio
 import json

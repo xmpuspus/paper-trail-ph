@@ -15,6 +15,7 @@ import click
 sys.path.insert(0, str(Path(__file__).parent))
 
 from config import ensure_data_dirs, setup_logging
+from collectors.dpwh import DPWHCollector
 from collectors.philgeps import PhilGEPSCollector
 from collectors.open_congress import OpenCongressCollector
 from collectors.psgc import PSGCCollector
@@ -41,14 +42,19 @@ def cli():
 @click.option(
     "--source",
     required=True,
-    type=click.Choice(["philgeps", "congress", "psgc", "dynasties", "all"]),
+    type=click.Choice(["dpwh", "philgeps", "congress", "psgc", "dynasties", "all"]),
 )
 @click.option("--since", default=2020, type=int, help="Start year for data collection")
-def collect(source: str, since: int):
+@click.option("--detailed", is_flag=True, help="Download detailed dataset (DPWH only, 115MB vs 24MB)")
+def collect(source: str, since: int, detailed: bool):
     """Collect data from government sources."""
     logger.info(f"Starting data collection: {source}")
 
     async def run_collection():
+        if source == "dpwh" or source == "all":
+            collector = DPWHCollector()
+            await collector.collect(detailed=detailed)
+
         if source == "philgeps" or source == "all":
             collector = PhilGEPSCollector()
             await collector.collect(since_year=since)
@@ -313,6 +319,7 @@ def status():
 
     # Check each data source
     sources = {
+        "DPWH Transparency": PROCESSED_DATA_DIR / "dpwh",
         "PhilGEPS": PROCESSED_DATA_DIR / "philgeps",
         "Congress": PROCESSED_DATA_DIR / "congress",
         "PSGC": PROCESSED_DATA_DIR / "psgc",

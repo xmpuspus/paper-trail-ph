@@ -1,0 +1,34 @@
+# Only the Next.js app + baked public/data JSON need to reach Vercel.
+# NOTE: patterns are anchored with a leading slash so "data/" does not also
+# match "public/data/" (the baked JSON the build reads).
+.env
+.env.*
+/data/
+.venv/
+venv/
+backend/
+scripts/
+cypher/
+docs/
+media/
+tmp/
+neo4j_data/
+neo4j_logs/
+node_modules/
+.next/
+out/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.log
+*.parquet
+*.jsonl
+.planning/
+.git/
+docker-compose.yml
+render.yaml
+PRD.md
+INSIGHTS.md
+DATA_SOURCES.md
+SATELLITE_RESEARCH.md

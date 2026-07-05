@@ -1,249 +1,87 @@
-# Paper Trail PH: Follow the paper trail
+# Paper Trail PH
 
-Philippine Public Accountability Graph. Cross-references four government databases — procurement records, audit reports, legislative data, and geographic codes — to surface relationships that are invisible when the data sits in separate systems.
+The flood-control money, mapped. An interactive graph of every DPWH flood-control contract on the public record, the firms that won them, and the license revocations, blacklists, and court filings now attached to some of them.
+
+**Live:** https://paper-trail-ph.vercel.app
 
 ![Paper Trail PH demo](media/papertrail-demo.gif)
 
-## What This Does
+> All data sourced from public records (COA, SEC, DBM, PSA, BSP, SALN disclosures). This tool computes statistical indicators only. Specific allegations, if any, require independent investigation and corroboration. Charges are allegations under the presumption of innocence.
 
-Philippine government procurement, audit, and election data are published across separate systems that don't talk to each other. A company winning a contract, its owner being related to the mayor, and COA flagging the concentration — these are three separate records in three separate databases. Nobody sees the connection unless they manually cross-reference everything.
+## What it is
 
-This project automates that cross-referencing by:
+The 2025 Philippine flood-control controversy is spread across separate records: DPWH's contract portal, PCAB license actions, SEC filings, COA fraud audits, Ombudsman and Sandiganbayan cases, and a year of news coverage. This site joins them in one place, starting from the contract data and layering a carefully sourced overlay on top.
 
-1. **Collecting** data from PhilGEPS (procurement), Open Congress (legislation), COA (audits), and PSA (geographic codes)
-2. **Resolving entities** across datasets (the same company spelled 6 different ways across agencies)
-3. **Deriving relationships** that aren't explicit in any single dataset (co-bidding patterns, ownership chains, surname matching)
-4. **Loading** everything into a Neo4j graph database
-5. **Analyzing** the graph for concentration, collusion, dynasty connections, and procurement red flags
-6. **Visualizing** the results in an interactive graph explorer with GraphRAG chat
+It answers a question the records can answer on their own: who won the most flood-control money, and where did it pool.
 
-## Architecture
+## The numbers
 
-```mermaid
-flowchart LR
-    subgraph Sources["Data Sources"]
-        PG["PhilGEPS (XLSX)"]
-        OC["Open Congress (API)"]
-        COA["COA Reports (PDF)"]
-        PSA["PSA PSGC (CSV)"]
-    end
+Every figure below is computed from the source data and reconciled across the site, the methodology page, and this README.
 
-    subgraph Pipeline["ETL Pipeline"]
-        C[Collect] --> T[Transform] --> L[Load]
-    end
+- **248,220** DPWH contracts, **₱6.379T**, infrastructure years 2016 to 2026.
+- **33,866** flood-control and drainage contracts, **₱1.586T**, the second-largest infrastructure category by value.
+- **6,558** distinct firms, resolved from the raw contractor field, and **220** district engineering offices.
+- **8** firms carry a `[REVOKED]` license tag in the DPWH data, across **3,902** contracts worth **₱182B** (that same tag appears on 256 raw contractor strings, which a naive count would report as 256 firms).
+- **20** flood-control district offices are highly concentrated (Herfindahl-Hirschman Index above 2,500, the US DOJ threshold).
+- Sunwest, Inc. holds the highest recorded flood-control value at **₱32.83B**; Topnotch Catalyst Builders Inc. (the demo target) resolves to one node at **285 contracts / ₱17.41B**.
 
-    subgraph Storage
-        NEO[(Neo4j)]
-        VEC[(Vector Index)]
-    end
+## Confidence tiers
 
-    subgraph App["Application"]
-        API[FastAPI] --> UI[Next.js]
-    end
+An inferred link never looks like a recorded one.
 
-    AN[Analysis]
+- **Recorded** (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.
+- **Inferred from records** (curved, lighter): computed, not stated, such as two firms that are both top awardees in the same district offices.
+- **Possible namesake** (faintest): a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.
 
-    Sources --> C
-    L --> NEO & VEC
-    NEO & VEC --> API
-    NEO --> AN
+The scandal overlay (owners, license revocations, charges) is primary-source-or-omit: an entry enters the graph only if it traces to a primary or primary-citing source (PCAB Board Resolution 075, Ombudsman and Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions). Firms without a confirmed action carry recorded facts only. Sources are in `public/data/overlay.json`.
+
+## Data sources
+
+- **DPWH contracts:** DPWH Transparency Portal via BetterGov.PH, published on HuggingFace as [`bettergovph/dpwh-transparency-data`](https://huggingface.co/datasets/bettergovph/dpwh-transparency-data). License CC0 1.0 Universal (public domain).
+- **Official actions:** curated and source-linked from PCAB, the Ombudsman and Sandiganbayan, DPWH, COA, and SEC.
+- **News tagging:** recent coverage (GDELT plus PH outlets) matched by exact firm name to the verified scandal set, each linking its source article.
+
+Full source list with access notes is in [DATA_SOURCES.md](DATA_SOURCES.md).
+
+## How it is built
+
+v1 is a static site. There is no database or backend at runtime; all data is baked to JSON at build time.
+
+```
+DPWH parquet ──▶ scripts/build_graph.py ──▶ public/data/*.json ──▶ Next.js (static) ──▶ Vercel
+                 (entity resolution + networkx metrics)
 ```
 
-### Data Pipeline
+- **Entity resolution** keys each firm on its DPWH numeric id (or a normalized name when absent), parses joint ventures on the `/` separator into recorded co-award edges, and reads the `[REVOKED]` and `FORMERLY` markers.
+- **Graph metrics** (betweenness, PageRank, degree, Louvain communities, HHI per district office) are computed offline with networkx and baked into the graph. No Neo4j GDS.
+- **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `in_news.json` (news tags).
+- **Frontend:** Next.js 14, Sigma.js v3 (WebGL). On mobile the graph degrades to a searchable table.
 
-The pipeline runs in four stages via `scripts/pipeline.py`:
-
-1. **Collect** — pulls raw data from PhilGEPS (Excel downloads), Open Congress (REST API), COA (PDF reports), and PSA (geographic codes). PhilGEPS has no API, so we download and diff weekly Excel datasets.
-
-2. **Transform** — normalizes entity names across agencies (same company spelled 6 different ways), runs Jaro-Winkler fuzzy matching for deduplication (auto-merge at 0.92+, manual review 0.85-0.91), and derives implicit relationships like co-bidding patterns, below-threshold contract clustering, and surname matching between contractor owners and politicians.
-
-3. **Load** — bulk inserts nodes and edges into Neo4j (graph structure) and generates text embeddings into Neo4j's native HNSW vector index (for GraphRAG semantic search).
-
-4. **Analyze** — runs graph queries for concentration metrics (HHI per agency), co-bidding network detection, political dynasty scoring, and 13 automated red flag detectors (contract splitting, bid rigging, phoenix companies, circular subcontracting, etc).
-
-### Stack
-
-- **Graph database:** Neo4j Community Edition
-- **Backend:** FastAPI (Python 3.11+), async Neo4j driver
-- **Frontend:** Next.js 14, Sigma.js (WebGL graph rendering), Tailwind CSS
-- **GraphRAG:** LLM-grounded Q&A over graph context via SSE streaming
-- **Analysis:** Python scripts querying Neo4j via Cypher + networkx
-
-## Setup
-
-### Prerequisites
-
-- Docker and Docker Compose
-- Python 3.11+
-- Node.js 18+
-
-### 1. Start Neo4j
+## Run locally
 
 ```bash
-docker compose up -d
-```
-
-Neo4j will be available at `http://localhost:7474` (browser) and `bolt://localhost:7687` (driver).
-
-### 2. Install Dependencies
-
-```bash
-# Frontend
 npm install
+npm run dev            # http://localhost:3000
 
-# Backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip3 install -r backend/requirements.txt
+# Rebuild the baked data from the DPWH parquet (offline):
+python3 scripts/build_graph.py
 ```
 
-### 3. Load Graph Data
+The parquet is pulled by `scripts/collectors/dpwh.py`. Neo4j is optional and only used as an offline exploration step; it is not required to run or build the site.
 
-```bash
-cd scripts
+## Related projects
 
-# Load the graph from cypher/seed.cypher
-python3 pipeline.py bootstrap
+The interactive graph joining DPWH contracts, officials, court outcomes, and live news in one explorer is the gap this fills. Prior and related work:
 
-# Or run the full pipeline from raw data sources:
-# python3 pipeline.py collect --source all --since 2020
-# python3 pipeline.py transform --deduplicate --derive-edges
-# python3 pipeline.py load --target neo4j
-```
+- [BetterGov.PH flood visualizations](https://visualizations.bettergov.ph/flood) (the data source)
+- [Rappler Politicontractors](https://www.rappler.com/newsbreak/investigative/politicians-government-contractors-connections-map/)
+- [InfraWatch PH](https://infrawatchph.org/home/contractors)
+- [PCIJ MoneyPolitics](https://moneypolitics.pcij.org/)
+- [OCCRP Aleph](https://aleph.occrp.org/)
+- [LittleSis](https://littlesis.org/)
 
-### 4. Start the Application
+## What is deferred
 
-```bash
-# Backend (port 8000)
-uvicorn backend.main:app --reload --port 8000
+Stated plainly, not faked: link prediction (Node2Vec), temporal money-flow, SALN wealth and SOCE campaign-finance joins, and the politician and dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the v1 site.
 
-# Frontend (port 3000, in a separate terminal)
-npm run dev
-```
-
-Open `http://localhost:3000` to explore the graph.
-
-## Running Analysis
-
-The analysis scripts query Neo4j directly and produce formatted reports:
-
-```bash
-cd scripts
-
-# Run all analyses
-python3 pipeline.py analyze
-
-# Run specific module
-python3 pipeline.py analyze --module concentration
-python3 pipeline.py analyze --module networks
-python3 pipeline.py analyze --module dynasties
-python3 pipeline.py analyze --module red-flags
-
-# Export as JSON
-python3 pipeline.py analyze --json-output > results.json
-```
-
-Each module can also run standalone:
-
-```bash
-python3 -m analysis.concentration
-python3 -m analysis.networks
-python3 -m analysis.dynasties
-python3 -m analysis.red_flags
-```
-
-### Analysis Modules
-
-| Module | What It Detects |
-|--------|----------------|
-| `concentration` | Agency-level HHI, monopoly suppliers, single-bidder contracts, cross-agency contractor reach |
-| `networks` | Co-bidding rings, bid rotation triads, subcontracting loops, shared addresses/officers |
-| `dynasties` | Politician-contractor ownership chains, geographic lock-in, dynasty scores, SALN wealth |
-| `red-flags` | Contract splitting near RA 9184 thresholds, round amounts, bid rigging indicators, overpricing, unliquidated funds, timeline surges |
-
-### Red Flag Detection API
-
-The backend runs 13 automated red flag detectors against the live graph:
-
-| Endpoint | What It Returns |
-|----------|----------------|
-| `GET /api/v1/analytics/red-flags` | All detected red flags grouped by entity with risk scoring |
-| `GET /api/v1/analytics/network/communities` | Densely connected contractor clusters |
-| `GET /api/v1/analytics/subcontract-cycles/{id}` | Circular subcontracting paths for a contractor |
-| `GET /api/v1/analytics/campaign-contracts/{id}` | Campaign donation → contract paths for a politician |
-| `GET /api/v1/analytics/phoenix-companies` | Companies sharing directors/addresses with blacklisted entities |
-| `GET /api/v1/analytics/saln-timeline/{id}` | SALN wealth declarations over time for a politician |
-
-## Pipeline Commands
-
-```bash
-cd scripts
-
-python3 pipeline.py collect --source <philgeps|congress|psgc|dynasties|all> [--since 2020]
-python3 pipeline.py transform [--deduplicate] [--derive-edges]
-python3 pipeline.py load --target <neo4j|vectors|all>
-python3 pipeline.py validate [--report]
-python3 pipeline.py stats
-python3 pipeline.py analyze [--module <name>] [--json-output]
-python3 pipeline.py status
-python3 pipeline.py bootstrap
-```
-
-## Data Sources
-
-All data is public record.
-
-| Source | Access | Notes |
-|--------|--------|-------|
-| [PhilGEPS](https://open.philgeps.gov.ph) | Manual XLSX download | No API — weekly re-download and diff |
-| [Open Congress](https://open-congress-api.bettergov.ph) | REST API | Rate limited, 2 req/sec |
-| [COA Reports](https://coa.gov.ph/reports/annual-audit-reports) | PDF download | Unstructured — currently limited to pilot reports |
-| [PSA PSGC](https://psa.gov.ph/classification/psgc) | CSV/XLSX download | Municipality codes, province-region mapping |
-| [Ateneo Policy Center](https://inclusivedemocracy.ph/data-and-infographics) | Web | Dynasty classification |
-| [COMELEC SOCE](https://comelec.gov.ph) | PDF download | Campaign donation filings (Statement of Contributions and Expenses) |
-| [GPPB Blacklist](https://www.gppb.gov.ph) | Web | Consolidated blacklisting records |
-| [Ombudsman SALN](https://www.ombudsman.gov.ph) | PDF download | Wealth declarations (Statement of Assets, Liabilities and Net Worth) |
-
-## Project Structure
-
-```
-paper-trail-ph/
-├── backend/                 # FastAPI application
-│   ├── routers/            # API endpoints (graph, analytics, chat)
-│   ├── services/           # Neo4j queries, GraphRAG, LLM
-│   └── models/             # Pydantic models
-├── src/                     # Next.js frontend
-│   ├── app/                # Pages and layout
-│   ├── components/         # Graph canvas, chat, analytics
-│   ├── lib/                # API client, constants
-│   └── types/              # TypeScript types
-├── scripts/                 # Data pipeline
-│   ├── collectors/         # Data source collectors
-│   ├── transformers/       # Entity resolution, relationship derivation
-│   ├── loaders/            # Neo4j and vector index loaders
-│   ├── quality/            # Validation and statistics
-│   ├── analysis/           # Graph analysis modules
-│   └── pipeline.py         # CLI entrypoint
-├── cypher/                  # Neo4j schema and data
-│   ├── schema.cypher       # Constraints and indexes
-│   └── seed.cypher         # Initial graph data
-└── docker-compose.yml       # Neo4j container
-```
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and configure:
-
-```bash
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=password
-
-# Optional — for GraphRAG chat
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-## Disclaimer
-
-Red flags identified by this analysis are statistical patterns derived from publicly available government records. They are not accusations of wrongdoing. All data comes from government-published sources.
+Not affiliated with any government agency.

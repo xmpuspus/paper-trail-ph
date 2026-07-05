@@ -1,4 +1,12 @@
-"""Dynasty detection from election data."""
+"""Dynasty detection from election data.
+
+Data source: COMELEC election results and Open Congress member data
+  - COMELEC: https://comelec.gov.ph (manual download, Cloudflare-protected)
+  - Open Congress API: https://open-congress-api.bettergov.ph/api/v1
+  - Dynasty classification: Thin (sequential) vs Fat (simultaneous) per
+    Mendoza, Jaminola, and Yap (2019), "From Fat to Obese," Ateneo ASOG.
+Method: Surname + province matching, overlapping term detection.
+"""
 
 import asyncio
 import json

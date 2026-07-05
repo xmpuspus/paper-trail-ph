@@ -53,3 +53,12 @@ tsconfig.tsbuildinfo
 dist/
 build/
 *.egg-info/
+
+# Claude Code
+.claude/
+.vercel
+
+# Session artifacts
+tmp/
+pipeline.log
+SATELLITE_RESEARCH.md

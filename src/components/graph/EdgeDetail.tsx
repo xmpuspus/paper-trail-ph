@@ -17,7 +17,7 @@ export const EDGE_EXPLANATIONS: Record<string, string> = {
   INVOLVES_OFFICIAL: "This audit finding involves or references this contract. A repeat finding signals systemic issues.",
   OWNED_BY: "Ownership relationship. Cross-reference with political connections to identify conflicts of interest.",
   LOCATED_IN: "Geographic relationship. Contractors clustered near procuring agencies may warrant scrutiny.",
-  FAMILY_OF: "Family relationship. The Anti-Dynasty Bill (if passed) would restrict relatives from holding simultaneous office.",
+  FAMILY_OF: "Family relationship. Various Anti-Dynasty Bill versions would impose restrictions on relatives within certain degrees of consanguinity holding elected office in the same jurisdiction.",
   HAS_AGENCY: "This municipality contains or oversees this government agency.",
   AUTHORED: "This legislator authored this bill.",
   CO_AUTHORED_WITH: "These legislators co-authored legislation together.",

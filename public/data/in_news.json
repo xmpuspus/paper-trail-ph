@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "reviewed": true,
+    "window": "2025-08 to 2026-07",
+    "method": "Candidate entities collected from GDELT + PH news search (Rappler, Philstar, Inquirer, GMA, Manila Times, PNA, Tribune). Matched to graph firm nodes by exact firm name against the primary-source-verified scandal set. No ambiguous or common-word matches were auto-tagged; had any existed they would have been escalated for review. Persons are handled in overlay.json, not tagged on the firm graph.",
+    "disclaimer": "Appearance in news coverage is not a finding of wrongdoing. Each tag links the source article. Statistical indicators derived from public records; patterns may have legitimate explanations."
+  },
+  "firms": {
+    "34061": {"headline": "ICI flags DPWH, Topnotch over unbuilt P72-M Bulacan flood control project", "source": "Philstar", "url": "https://www.philstar.com/headlines/2025/11/04/2484794/ici-flags-dpwh-topnotch-over-unbuilt-p72-m-bulacan-flood-control-project", "date": "2025-11-04", "articles": 8},
+    "46535": {"headline": "DPWH perpetually disqualifies top flood control contractors Wawao, SYMS", "source": "Rappler", "url": "https://www.rappler.com/philippines/flood-control-contractor-wawao-builders-syms-perpetually-disqualified-dpwh/", "date": "2025-09-03", "articles": 8},
+    "48517": {"headline": "DPWH perpetually disqualifies top flood control contractors Wawao, SYMS", "source": "Rappler", "url": "https://www.rappler.com/philippines/flood-control-contractor-wawao-builders-syms-perpetually-disqualified-dpwh/", "date": "2025-09-03", "articles": 6},
+    "31762": {"headline": "9 Discaya firms stripped of license as contractors", "source": "Inquirer", "url": "https://newsinfo.inquirer.net/2104392/9-discaya-firms-stripped-of-license-as-contractors", "date": "2025-09-03", "articles": 7},
+    "38958": {"headline": "The Flood Control Files, Part 1: Legacy, Alpha & Omega, St. Timothy SEC documents bared", "source": "Tribune", "url": "https://tribune.net.ph/2025/08/29/the-flood-control-files-part-1-legacy-alpha-omega-st-timothy-sec-documents-bared", "date": "2025-08-29", "articles": 5},
+    "39196": {"headline": "The Flood Control Files, Part 1: Legacy, Alpha & Omega, St. Timothy SEC documents bared", "source": "Tribune", "url": "https://tribune.net.ph/2025/08/29/the-flood-control-files-part-1-legacy-alpha-omega-st-timothy-sec-documents-bared", "date": "2025-08-29", "articles": 4},
+    "40908": {"headline": "9 Discaya firms stripped of license as contractors", "source": "Inquirer", "url": "https://newsinfo.inquirer.net/2104392/9-discaya-firms-stripped-of-license-as-contractors", "date": "2025-09-03", "articles": 3},
+    "45914": {"headline": "9 Discaya firms stripped of license as contractors", "source": "Inquirer", "url": "https://newsinfo.inquirer.net/2104392/9-discaya-firms-stripped-of-license-as-contractors", "date": "2025-09-03", "articles": 3},
+    "49129": {"headline": "9 Discaya firms stripped of license as contractors", "source": "Inquirer", "url": "https://newsinfo.inquirer.net/2104392/9-discaya-firms-stripped-of-license-as-contractors", "date": "2025-09-03", "articles": 3},
+    "34105": {"headline": "The Flood Control Files, Part 3: Centerways, Sunwest, Hi-Tone", "source": "Tribune", "url": "https://tribune.net.ph/2025/08/29/the-flood-control-files-part-3-centerways-hi-tone", "date": "2025-08-29", "articles": 4},
+    "33234": {"headline": "Firm with P250,000 capital bags P5-B flood control deals", "source": "Inquirer", "url": "https://newsinfo.inquirer.net/2096637/firm-with-p250000-capital-bags-p5-b-flood-control-deals", "date": "2025-08-28", "articles": 4},
+    "22465": {"headline": "The Flood Control Files, Part 1: Legacy, Alpha & Omega, St. Timothy SEC documents bared", "source": "Tribune", "url": "https://tribune.net.ph/2025/08/29/the-flood-control-files-part-1-legacy-alpha-omega-st-timothy-sec-documents-bared", "date": "2025-08-29", "articles": 3},
+    "15906": {"headline": "Sandiganbayan raffles off cases vs Zaldy Co, others over flood control mess", "source": "GMA News", "url": "https://www.gmanetwork.com/news/topstories/nation/966658/sandiganbayan-raffles-off-cases-vs-zaldy-co-others-over-flood-control-mess/", "date": "2025-11-19", "articles": 4}
+  }
+}

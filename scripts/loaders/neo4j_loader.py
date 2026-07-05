@@ -218,6 +218,130 @@ class Neo4jLoader:
 
         return records
 
+    async def _load_dpwh_data(self, dpwh_dir: Path) -> None:
+        """Load DPWH transparency data into graph."""
+        # Load pre-extracted agencies
+        agency_files = sorted(dpwh_dir.glob("agencies_*.jsonl"))
+        if agency_files:
+            agencies = self._load_jsonl(agency_files[-1])
+            await self.load_nodes("Agency", agencies, "name")
+
+        # Load pre-extracted contractors
+        contractor_files = sorted(dpwh_dir.glob("contractors_*.jsonl"))
+        if contractor_files:
+            contractors = self._load_jsonl(contractor_files[-1])
+            await self.load_nodes("Contractor", contractors, "name")
+
+        # Load contracts and edges
+        contract_files = sorted(dpwh_dir.glob("contracts_*.jsonl"))
+        if contract_files:
+            contracts = self._load_jsonl(contract_files[-1])
+            await self.load_nodes("Contract", contracts, "reference_number")
+
+            # PROCURED edges (Agency -> Contract)
+            procured_edges = [
+                {
+                    "agency_name": c.get("procuring_entity"),
+                    "contract_ref": c.get("reference_number"),
+                }
+                for c in contracts
+                if c.get("procuring_entity") and c.get("reference_number")
+            ]
+            await self.load_edges(
+                "PROCURED", procured_edges,
+                "Agency", "Contract",
+                "name", "reference_number",
+                "agency_name", "contract_ref",
+            )
+
+            # AWARDED_TO edges (Contract -> Contractor)
+            awarded_edges = [
+                {
+                    "contract_ref": c.get("reference_number"),
+                    "contractor_name": c.get("contractor_name"),
+                    "amount": c.get("amount"),
+                    "start_date": c.get("start_date"),
+                }
+                for c in contracts
+                if c.get("reference_number") and c.get("contractor_name")
+            ]
+            await self.load_edges(
+                "AWARDED_TO", awarded_edges,
+                "Contract", "Contractor",
+                "reference_number", "name",
+                "contract_ref", "contractor_name",
+            )
+
+            logger.info(f"DPWH data loaded: {len(contracts)} contracts")
+        else:
+            logger.warning("No DPWH contract data found. Run 'pipeline.py collect --source dpwh' first.")
+
+    async def _load_philgeps_data(self, philgeps_dir: Path) -> None:
+        """Load PhilGEPS procurement data into graph."""
+        contract_files = sorted(philgeps_dir.glob("contracts_*.jsonl"))
+        if not contract_files:
+            return
+
+        contracts = self._load_jsonl(contract_files[-1])
+
+        # Extract unique agencies
+        agencies = {}
+        for contract in contracts:
+            agency_name = contract.get("procuring_entity")
+            if agency_name and agency_name not in agencies:
+                agencies[agency_name] = {"name": agency_name, "type": "unknown"}
+
+        await self.load_nodes("Agency", list(agencies.values()), "name")
+
+        # Extract unique contractors
+        contractors = {}
+        for contract in contracts:
+            contractor_name = contract.get("contractor_name")
+            if contractor_name and contractor_name not in contractors:
+                contractors[contractor_name] = {
+                    "contractor_name": contractor_name,
+                    "name": contractor_name,
+                }
+
+        await self.load_nodes("Contractor", list(contractors.values()), "name")
+        await self.load_nodes("Contract", contracts, "reference_number")
+
+        # PROCURED edges
+        procured_edges = [
+            {
+                "agency_name": c.get("procuring_entity"),
+                "contract_ref": c.get("reference_number"),
+            }
+            for c in contracts
+            if c.get("procuring_entity") and c.get("reference_number")
+        ]
+        await self.load_edges(
+            "PROCURED", procured_edges,
+            "Agency", "Contract",
+            "name", "reference_number",
+            "agency_name", "contract_ref",
+        )
+
+        # AWARDED_TO edges
+        awarded_edges = [
+            {
+                "contract_ref": c.get("reference_number"),
+                "contractor_name": c.get("contractor_name"),
+                "amount": c.get("amount"),
+                "award_date": c.get("award_date"),
+            }
+            for c in contracts
+            if c.get("reference_number") and c.get("contractor_name")
+        ]
+        await self.load_edges(
+            "AWARDED_TO", awarded_edges,
+            "Contract", "Contractor",
+            "reference_number", "name",
+            "contract_ref", "contractor_name",
+        )
+
+        logger.info(f"PhilGEPS data loaded: {len(contracts)} contracts")
+
     async def load_full_dataset(self, data_dir: Path | None = None) -> None:
         """
         Orchestrate full dataset load from processed JSON files.
@@ -242,81 +366,15 @@ class Neo4jLoader:
             municipalities = self._load_jsonl(muni_files[-1])
             await self.load_nodes("Municipality", municipalities, "psgc_code")
 
-        # Load contracts
-        contract_files = sorted((data_dir / "philgeps").glob("contracts_*.jsonl"))
-        if contract_files:
-            contracts = self._load_jsonl(contract_files[-1])
+        # Load DPWH data (primary source - real transparency data)
+        dpwh_dir = data_dir / "dpwh"
+        if dpwh_dir.exists():
+            await self._load_dpwh_data(dpwh_dir)
 
-            # Extract unique agencies
-            agencies = {}
-            for contract in contracts:
-                agency_name = contract.get("procuring_entity")
-                if agency_name and agency_name not in agencies:
-                    agencies[agency_name] = {
-                        "name": agency_name,
-                        "type": "unknown",  # Would need enrichment
-                    }
-
-            await self.load_nodes("Agency", list(agencies.values()), "name")
-
-            # Extract unique contractors
-            contractors = {}
-            for contract in contracts:
-                contractor_name = contract.get("contractor_name")
-                if contractor_name and contractor_name not in contractors:
-                    contractors[contractor_name] = {
-                        "contractor_name": contractor_name,
-                        "name": contractor_name,
-                    }
-
-            await self.load_nodes("Contractor", list(contractors.values()), "name")
-
-            # Load contracts
-            await self.load_nodes("Contract", contracts, "reference_number")
-
-            # Create PROCURED edges (Agency -> Contract)
-            procured_edges = [
-                {
-                    "agency_name": c.get("procuring_entity"),
-                    "contract_ref": c.get("reference_number"),
-                }
-                for c in contracts
-                if c.get("procuring_entity") and c.get("reference_number")
-            ]
-
-            await self.load_edges(
-                "PROCURED",
-                procured_edges,
-                "Agency",
-                "Contract",
-                "name",
-                "reference_number",
-                "agency_name",
-                "contract_ref",
-            )
-
-            # Create AWARDED_TO edges (Contract -> Contractor)
-            awarded_edges = [
-                {
-                    "contract_ref": c.get("reference_number"),
-                    "contractor_name": c.get("contractor_name"),
-                    "amount": c.get("amount"),
-                    "award_date": c.get("award_date"),
-                }
-                for c in contracts
-                if c.get("reference_number") and c.get("contractor_name")
-            ]
-
-            await self.load_edges(
-                "AWARDED_TO",
-                awarded_edges,
-                "Contract",
-                "Contractor",
-                "reference_number",
-                "name",
-                "contract_ref",
-                "contractor_name",
-            )
+        # Load PhilGEPS data (supplementary procurement data)
+        philgeps_dir = data_dir / "philgeps"
+        if philgeps_dir.exists():
+            await self._load_philgeps_data(philgeps_dir)
 
         # Load politicians
         member_files = sorted((data_dir / "congress").glob("members_*.jsonl"))

@@ -164,3 +164,30 @@ ANALYZE → Formatted reports / JSON
 1. Go to https://psa.gov.ph/classification/psgc
 2. Download latest publication (XLSX or CSV)
 3. Place in `data/raw/psgc/`
+
+## Data Sources
+
+All data used in this project comes from Philippine government public records and open data portals.
+
+| Source | URL | Data | Access Method | License |
+|--------|-----|------|---------------|---------|
+| DPWH Transparency Portal | https://transparency.dpwh.gov.ph | Infrastructure projects, budgets, contractors, GPS | HuggingFace pre-scraped dataset | CC0 1.0 |
+| PhilGEPS | https://notices.philgeps.gov.ph | Procurement notices, awards, contracts | Excel download (manual) | Public record |
+| Open Congress PH | https://open-congress-api.bettergov.ph | Legislators, bills, committees | REST API | Open data |
+| PSA PSGC | https://psa.gov.ph/classification/psgc | Geographic codes, provinces, municipalities | Excel download | Public record |
+| COMELEC | https://comelec.gov.ph | Election results, candidates | Scanned PDFs | Public record |
+| COA | https://coa.gov.ph/reports/annual-audit-reports | Audit findings, recommendations | PDF reports | Public record |
+
+### Source Details
+
+**DPWH Transparency Portal** — The DPWH API is behind Cloudflare protection, so we use a CC0-licensed pre-scraped Parquet dataset maintained by BetterGov.PH on HuggingFace: https://huggingface.co/datasets/bettergovph/dpwh-transparency-data. Contains 248K+ infrastructure contracts (2016-2026) with budgets, contractors, GPS coordinates, and completion status. Original scraper by @csiiiv.
+
+**PhilGEPS** — The Philippine Government Electronic Procurement System has no public API. Data must be manually downloaded as XLSX files from https://open.philgeps.gov.ph or https://data.gov.ph. Includes award notices, bid notices, and contractor registry.
+
+**Open Congress PH** — REST API maintained by BetterGov.PH volunteers at https://open-congress-api.bettergov.ph/api/v1 (docs: /api/scalar). Coverage: Congresses 8-20, 165K+ bills, 1.1K+ legislators, 200 committees. Data is manually encoded — may contain inaccuracies per maintainer. Rate-limited to 2 req/s.
+
+**PSA PSGC** — The Philippine Standard Geographic Code is published by the Philippine Statistics Authority as Excel files. Provides the canonical geographic hierarchy (region > province > municipality > barangay) with 10-digit codes. Also available via https://openstat.psa.gov.ph.
+
+**COMELEC** — Election results published by the Commission on Elections. Primarily scanned PDFs, requiring OCR for extraction. Used for dynasty detection via surname + province matching.
+
+**COA** — Commission on Audit annual audit reports. Unstructured PDF reports covering government agency spending, findings, and recommendations. Phase 2 data source (pilot with 10-20 reports).

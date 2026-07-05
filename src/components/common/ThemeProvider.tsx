@@ -10,11 +10,11 @@ const ThemeContext = createContext<{
 }>({ theme: "light", toggleTheme: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     const saved = localStorage.getItem("paper-trail-theme") as Theme;
-    if (saved) setTheme(saved);
+    if (saved === "light" || saved === "dark") setTheme(saved);
   }, []);
 
   useEffect(() => {

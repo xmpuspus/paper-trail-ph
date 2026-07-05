@@ -1,9 +1,12 @@
 """Agency-level market concentration analysis.
 
 Measures how concentrated procurement spending is within each agency
-using the Herfindahl-Hirschman Index (HHI). The US DOJ considers an HHI
-above 2500 to indicate a highly concentrated market. Philippine
-government agencies routinely exceed this.
+using the Herfindahl-Hirschman Index (HHI). Thresholds per US DOJ
+Horizontal Merger Guidelines: HHI < 1500 = unconcentrated,
+1500-2500 = moderately concentrated, > 2500 = highly concentrated.
+
+Data source: Computed from real DPWH/PhilGEPS contract data loaded via pipeline.
+All results are derived — no hardcoded statistics.
 """
 
 import asyncio

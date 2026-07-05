@@ -1,57 +1,58 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { DISCLAIMER } from "@/lib/constants";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 
-const inter = Inter({
+const display = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  weight: ["400", "500", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Paper Trail PH | Philippine Public Accountability Graph",
-  description: "Follow the paper trail — visualize procurement, political connections, and red flags in Philippine public spending",
-  keywords: "philippines, procurement, transparency, accountability, government, contracts, philgeps",
+  title: "Paper Trail PH: the flood-control money, mapped",
+  description:
+    "An interactive graph of DPWH flood-control contracts, the firms that won them, and the official actions and cases on record. Statistical indicators from public records, not accusations.",
+  keywords:
+    "philippines, DPWH, flood control, procurement, transparency, accountability, contractors, PhilGEPS, corruption, public records",
+  openGraph: {
+    title: "Paper Trail PH: the flood-control money, mapped",
+    description:
+      "Follow PHP 1.586 trillion in DPWH flood-control contracts across 33,866 projects and the firms that won them.",
+    type: "website",
+  },
 };
+
+// Set the theme before paint to avoid a flash of the wrong mode.
+const noFlash = `(function(){try{var t=localStorage.getItem('paper-trail-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
-        <ThemeProvider>
-          <DisclaimerBanner />
-          {children}
-        </ThemeProvider>
+    <html lang="en" data-theme="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: noFlash }} />
+      </head>
+      <body className={`${display.variable} ${body.variable} ${mono.variable}`}>
+        <a href="#main" className="skip-link">Skip to content</a>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
-  );
-}
-
-function DisclaimerBanner() {
-  return (
-    <div
-      className="fixed top-0 left-0 right-0 z-[60] backdrop-blur-md"
-      style={{
-        backgroundColor: "var(--glass-bg)",
-        borderBottom: "1px solid var(--color-border)",
-      }}
-    >
-      <div
-        className="px-4 py-1.5 text-center text-[11px] tracking-wide"
-        style={{ color: "var(--color-text-muted)" }}
-      >
-        {DISCLAIMER}
-      </div>
-    </div>
   );
 }

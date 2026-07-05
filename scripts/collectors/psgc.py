@@ -1,4 +1,11 @@
-"""PSGC (Philippine Standard Geographic Code) collector."""
+"""PSGC (Philippine Standard Geographic Code) collector.
+
+Data source: Philippine Statistics Authority (PSA)
+  - PSGC publication: https://psa.gov.ph/classification/psgc
+  - OpenStat: https://openstat.psa.gov.ph
+Access: Manual download (Cloudflare-protected, no automation-friendly API).
+License: Philippine government public records.
+"""
 
 import asyncio
 import json

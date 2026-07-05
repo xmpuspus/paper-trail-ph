@@ -28,7 +28,7 @@ function getNodeInsight(node: GraphNode): string | null {
   if (type === "Contract") {
     const method = properties.procurement_method;
     if (method === "Negotiated Procurement") {
-      return `Negotiated procurement bypasses competitive bidding. While legal for emergencies and small amounts, it's frequently used to circumvent transparency requirements. Check if the justification matches RA 9184 criteria.`;
+      return `Negotiated procurement bypasses competitive bidding. While legal under RA 9184 Section 53 for emergencies, two failed biddings, and small value procurement, it reduces competitive safeguards and can circumvent the intent of open bidding requirements if misused. Check if the justification matches RA 9184 criteria.`;
     }
     if (red_flags && red_flags.length > 0) {
       return `This contract has been flagged. Cross-reference with the winning contractor's other contracts and the procuring agency's concentration metrics for patterns.`;
@@ -51,7 +51,7 @@ function getNodeInsight(node: GraphNode): string | null {
     const positions = properties.positions_held;
     const munis = properties.municipalities;
     if (positions && munis) {
-      return `This family holds ${positions} government positions across ${Array.isArray(munis) ? munis.length : 1} municipalities. The Philippines has no anti-dynasty law, allowing families to consolidate political power across jurisdictions.`;
+      return `This family holds ${positions} government positions across ${Array.isArray(munis) ? munis.length : 1} municipalities. Despite a constitutional mandate (Article II, Section 26), the Philippines has no implementing anti-dynasty law, allowing families to consolidate political power across jurisdictions.`;
     }
   }
 

@@ -22,6 +22,9 @@ NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
 OPEN_CONGRESS_BASE_URL = "https://open-congress-api.bettergov.ph/api/v1"
 PHILGEPS_DATA_PORTAL = "https://data.gov.ph"
 PSA_PSGC_URL = "https://psa.gov.ph/classification/psgc"
+DPWH_TRANSPARENCY_URL = "https://transparency.dpwh.gov.ph"
+DPWH_API_URL = "https://api.transparency.dpwh.gov.ph"
+DPWH_HF_DATASET = "bettergovph/dpwh-transparency-data"
 
 # Rate limiting
 CONGRESS_API_RATE_LIMIT = 2  # requests per second
@@ -66,10 +69,12 @@ def setup_logging(name: str = "pipeline") -> logging.Logger:
 def ensure_data_dirs() -> None:
     """Create data directories if they don't exist."""
     directories = [
+        RAW_DATA_DIR / "dpwh",
         RAW_DATA_DIR / "philgeps",
         RAW_DATA_DIR / "congress",
         RAW_DATA_DIR / "psgc",
         RAW_DATA_DIR / "dynasties",
+        PROCESSED_DATA_DIR / "dpwh",
         PROCESSED_DATA_DIR / "philgeps",
         PROCESSED_DATA_DIR / "congress",
         PROCESSED_DATA_DIR / "psgc",

@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "purpose": "Curated overlay linking recorded DPWH awardees to official actions and court filings. Primary-source-or-omit: every entry carries a source link. Firms with no confirmed official action carry recorded facts only.",
+    "compiled": "2026-07",
+    "disclaimer": "All data sourced from public records (COA, SEC, DBM, PSA, BSP, SALN disclosures) and named court/agency filings. This tool computes statistical indicators only. Charges are allegations under the presumption of innocence; specific allegations, if any, require independent investigation and corroboration.",
+    "verification_note": "Each action below was cross-checked against a primary or primary-citing source (PCAB Board Resolution 075, Ombudsman/Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions). Rappler and Philstar block automated fetching; where they were the only source, the fact was confirmed against a second outlet or Wikipedia's cited references."
+  },
+  "sources": {
+    "pcab075_inq": {"label": "Inquirer: 9 Discaya firms stripped of contractor license (PCAB Board Resolution 075)", "url": "https://newsinfo.inquirer.net/2104392/9-discaya-firms-stripped-of-license-as-contractors", "type": "news citing PCAB resolution", "date": "2025-09-03"},
+    "pcab075_gma": {"label": "GMA: PCAB revokes licenses of 9 Sarah Discaya-owned firms", "url": "https://www.gmanetwork.com/news/money/companies/957869/pcab-revokes-contractor-licenses-of-9-sarah-discaya-owned-construction-firms/", "type": "news citing PCAB resolution", "date": "2025-09-03"},
+    "sec_gma": {"label": "GMA: SEC revokes corporate registrations of St. Timothy, St. Gerrard", "url": "https://www.gmanetwork.com/news/money/companies/968472/sec-revokes-corporate-registrations-of-discaya-owned-st-timothy-st-gerrard", "type": "news citing SEC resolution", "date": "2025-11-26"},
+    "sunwest_gma_file": {"label": "GMA: Sandiganbayan raffles off cases vs Zaldy Co, others over flood control mess", "url": "https://www.gmanetwork.com/news/topstories/nation/966658/sandiganbayan-raffles-off-cases-vs-zaldy-co-others-over-flood-control-mess/", "type": "news citing Ombudsman/Sandiganbayan filing", "date": "2025-11-19"},
+    "sunwest_gma_charge": {"label": "GMA: Ombudsman charges Zaldy Co over flood project anomalies (Naujan, Oriental Mindoro)", "url": "https://www.gmanetwork.com/news/topstories/nation/966555/ombudsman-charges-zaldy-co-flood-project-anomalies/", "type": "news citing Ombudsman filing", "date": "2025-11"},
+    "wawao_mt": {"label": "Manila Times: DPWH Sec. Dizon orders perpetual ban of Wawao Builders, SYMS Construction for ghost projects", "url": "https://www.manilatimes.net/2025/09/05/news/national/dpwh-secretary-dizon-orders-perpetual-ban-of-wawao-builders-syms-construction-for-ghost-projects/2179262", "type": "news citing DPWH Secretary order", "date": "2025-09-05"},
+    "topnotch_wiki": {"label": "Wikipedia: Flood control projects scandal (COA fraud audit flags Topnotch Barangay Bulihan riverbank project, ~P69M)", "url": "https://en.wikipedia.org/wiki/Flood_control_projects_scandal_in_the_Philippines", "type": "encyclopedia citing COA fraud audit", "date": "2026"},
+    "topnotch_doj": {"label": "Inquirer: DOJ issues lookout bulletin vs individuals in flood mess", "url": "https://newsinfo.inquirer.net/2104398/doj-issues-lookout-bulletin-vs-individuals-in-flood-mess", "type": "news citing DOJ ILBO", "date": "2025-09-03"},
+    "scandal_wiki": {"label": "Wikipedia: Flood control projects scandal in the Philippines", "url": "https://en.wikipedia.org/wiki/Flood_control_projects_scandal_in_the_Philippines", "type": "encyclopedia", "date": "2026"}
+  },
+  "investigation": [
+    {"body": "Independent Commission for Infrastructure (ICI)", "role": "Lead investigative body (Executive Order 94)", "chair": "Ret. SC Assoc. Justice Andres Reyes Jr.", "period": "2025-09-11 to 2026-03-31", "note": "Investigated flagged flood-control projects; referred individuals to the Ombudsman and DOJ. Final report held pending release decision.", "source": "scandal_wiki"},
+    {"body": "Senate Blue Ribbon Committee", "role": "Parallel legislative inquiry (\"Philippines Under Water\")", "period": "2025-08 onward", "note": "Subpoenaed the highest-volume contractors; Sarah Discaya testified Sept 1, 2025.", "source": "scandal_wiki"},
+    {"body": "Office of the Ombudsman", "role": "Criminal and administrative prosecution", "period": "2025-09 onward", "note": "Filed the first criminal charges before the Sandiganbayan (Nov 2025).", "source": "sunwest_gma_file"},
+    {"body": "Commission on Audit (COA)", "role": "Fraud audit authority", "period": "2025-08 onward", "note": "Issued fraud audit reports on Bulacan flood-control projects.", "source": "topnotch_wiki"}
+  ],
+  "context": {
+    "top15_note": "News reporting and the Marcos administration's review found that about 15 contractors received roughly PHP 100 billion, or around 20% of flood-control program spending. Being a high-volume awardee is a descriptive fact from the records, not an allegation.",
+    "top15_source": "scandal_wiki"
+  },
+  "persons": [
+    {"id": "P-discaya-sarah", "name": "Cezarah \"Sarah\" Discaya", "role": "Admitted owner/officer of nine construction firms (Senate testimony, Sept 1, 2025)", "firms": ["31762", "38958", "39196", "40908", "45914", "49129", "52351", "45002", "49128"], "status": "Firms' PCAB contractor licenses revoked (Board Resolution 075, Sept 2025)", "sources": ["pcab075_inq", "pcab075_gma"]},
+    {"id": "P-discaya-curlee", "name": "Curlee Discaya", "role": "Co-owner (spouse) of the Discaya-controlled firms", "firms": ["31762", "38958", "39196"], "status": "Firms' PCAB contractor licenses revoked (Board Resolution 075, Sept 2025)", "sources": ["pcab075_inq"]},
+    {"id": "P-co-zaldy", "name": "Elizaldy \"Zaldy\" Co", "role": "Resigned representative; linked to Sunwest, Inc.", "firms": ["15906"], "status": "Charged by the Ombudsman before the Sandiganbayan (graft, malversation) over the Naujan flood-control project, Nov 2025. Charges are allegations; case pending.", "sources": ["sunwest_gma_file", "sunwest_gma_charge"]},
+    {"id": "P-villanueva", "name": "Eumir and Pamela Villanueva", "role": "Owners of Topnotch Catalyst Builders Inc.", "firms": ["34061"], "status": "Named on the DOJ immigration lookout bulletin order (Sept 2025, news-reported). A lookout order is investigative, not a charge.", "sources": ["topnotch_doj"]}
+  ],
+  "firms": {
+    "31762": {"owner": "Cezarah \"Sarah\" Discaya", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"},
+      {"type": "sec_cancelled", "label": "SEC cancelled the corporate registration for false beneficial-ownership filings", "status": "recorded", "date": "2025-11-26", "source": "sec_gma"}
+    ]},
+    "38958": {"owner": "Discaya-controlled", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "39196": {"owner": "Cezarah \"Sarah\" Discaya", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"},
+      {"type": "sec_cancelled", "label": "SEC cancelled the corporate registration for false beneficial-ownership filings", "status": "recorded", "date": "2025-11-26", "source": "sec_gma"}
+    ]},
+    "40908": {"owner": "Discaya-controlled", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "45914": {"owner": "Discaya-controlled", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "49129": {"owner": "Discaya-controlled", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "52351": {"owner": "Discaya-controlled", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "45002": {"owner": "Discaya-controlled (per PCAB resolution)", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "49128": {"owner": "Discaya-controlled (per PCAB resolution)", "actions": [
+      {"type": "license_revoked", "label": "PCAB revoked the contractor license (Board Resolution 075) on collusion / bid-rigging grounds", "status": "recorded", "date": "2025-09", "source": "pcab075_inq"}
+    ]},
+    "15906": {"owner": "Linked to Elizaldy \"Zaldy\" Co", "actions": [
+      {"type": "charged_pending", "label": "The Ombudsman charged company directors and Zaldy Co before the Sandiganbayan (graft under RA 3019 sec. 3.e and 3.h, and malversation) over the PHP 289.5-million Naujan, Oriental Mindoro flood-control project. Cases were distributed to the 5th, 6th and 7th Divisions (Nov 2025). Charges are allegations; the case is pending.", "status": "alleged", "date": "2025-11", "source": "sunwest_gma_file"}
+    ]},
+    "46535": {"actions": [
+      {"type": "blacklisted", "label": "DPWH ordered perpetual disqualification for ghost flood-control projects in Bulacan (DPWH Secretary order)", "status": "recorded", "date": "2025-09-05", "source": "wawao_mt"}
+    ]},
+    "48517": {"actions": [
+      {"type": "blacklisted", "label": "DPWH ordered perpetual disqualification for ghost flood-control projects in Bulacan (DPWH Secretary order)", "status": "recorded", "date": "2025-09-05", "source": "wawao_mt"}
+    ]},
+    "34061": {"owner": "Eumir and Pamela Villanueva", "actions": [
+      {"type": "flagged_review", "label": "Flagged in a COA fraud audit over a riverbank protection project at Barangay Bulihan, Bulacan (about PHP 69 million). Flagged for review; not a finding of guilt.", "status": "alleged", "date": "2025-11", "source": "topnotch_wiki"},
+      {"type": "lookout_order", "label": "Owners named on the DOJ immigration lookout bulletin order (investigative, not a charge)", "status": "alleged", "date": "2025-09", "source": "topnotch_doj"}
+    ]}
+  }
+}

@@ -1,4 +1,12 @@
-"""Open Congress API collector - Philippine legislative data."""
+"""Open Congress API collector - Philippine legislative data.
+
+Data source: Open Congress PH API by BetterGov.PH
+  - API: https://open-congress-api.bettergov.ph/api/v1
+  - Docs: https://open-congress-api.bettergov.ph/api/scalar
+  - Org: https://bettergov.ph (volunteer-led civic tech)
+Coverage: Congresses 8-20, 165K+ bills, 1.1K+ legislators.
+License: Open data. Manually encoded — may contain inaccuracies per maintainer.
+"""
 
 import asyncio
 import json

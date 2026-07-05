@@ -3,6 +3,11 @@
 Automated checks for patterns that indicate irregularities:
 contract splitting, suspiciously round amounts, bid rigging indicators,
 timeline clustering, and audit findings linked to political families.
+
+Legal reference: RA 9184 (Government Procurement Reform Act) defines
+bidding thresholds — public bidding required above PHP 5M.
+Data source: Computed from real contract data loaded via pipeline.
+All results are derived — no hardcoded statistics.
 """
 
 import asyncio

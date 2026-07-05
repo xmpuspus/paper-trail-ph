@@ -3,6 +3,10 @@
 Traces ownership chains from contractors back to political families,
 measures dynasty concentration scores, and checks whether dynasty-linked
 contractors are geographically locked to their patron's territory.
+
+Data source: Computed from real data loaded via pipeline (COMELEC results,
+Open Congress API, DPWH/PhilGEPS contracts).
+All results are derived from graph queries — no hardcoded statistics.
 """
 
 import asyncio

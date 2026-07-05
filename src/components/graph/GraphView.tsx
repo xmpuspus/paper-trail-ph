@@ -37,8 +37,9 @@ function resolveColors() {
     } as Record<string, string>,
     cat: Array.from({ length: 8 }, (_, i) => cssColor(`--cat-${i + 1}`, "#888")),
     catOther: cssColor("--cat-other", "#888"),
-    tierRecorded: cssColor("--tier-recorded", "#9db2cc"),
-    tierDerived: cssColor("--tier-derived", "#38b2c4"),
+    // faint edges so the nodes carry the picture, not the mesh
+    tierRecorded: cssColor("--tier-recorded", "#9db2cc") + "4d",
+    tierDerived: cssColor("--tier-derived", "#38b2c4") + "66",
     label: cssColor("--graph-label", "#a2b4ca"),
   };
 }
@@ -97,14 +98,15 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
     // Organic force-directed layout (no community pre-packing, which produced
     // tight circular clumps). Random seed positions were set on each node.
     loadGraph(graph);
+    const big = graph.order > 900;
     forceAtlas2.assign(graph, {
-      iterations: 300,
+      iterations: big ? 200 : 420,
       settings: {
-        gravity: 0.6,
-        scalingRatio: 14,
+        gravity: big ? 0.5 : 0.28,
+        scalingRatio: big ? 16 : 34,
         linLogMode: true,
         adjustSizes: true,
-        slowDown: 6,
+        slowDown: 5,
         barnesHutOptimize: true,
         outboundAttractionDistribution: true,
       },

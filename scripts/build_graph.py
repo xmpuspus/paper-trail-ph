@@ -386,28 +386,30 @@ def main() -> None:
                     ego_deos.add(dn)
     graph_topnotch = build_graph_json(ego_firms, ego_deos & fc_deo_keys, include_colocated=True)
 
-    # ---- Scandal core graph: small, fast first paint. Top flood-control firms
-    # by recorded value + every revoked-license firm + their JV co-awardees.
-    scandal_firm_keys = set(sorted(fc_firm_keys, key=lambda k: firm[k]["val_fc"], reverse=True)[:70])
+    # ---- Scandal core graph: deliberately small and legible (not the full
+    # dense network). The firms at the centre of the scandal + the district
+    # offices they SHARE, so the picture reads as concentration, not a hairball.
+    NAMED = {"34061", "31762", "38958", "39196", "40908", "45914", "49129",
+             "52351", "45002", "49128", "15906", "46535", "48517", "34105",
+             "33234", "22465"}  # the named scandal firms
+    scandal_firm_keys = set(sorted(fc_firm_keys, key=lambda k: firm[k]["val_fc"], reverse=True)[:24])
     scandal_firm_keys |= {k for k in fc_firm_keys if firm[k]["revoked"]}
-    scandal_firm_keys |= ego_firms
-    hop = set()
-    for (a, b), st in co_award.items():
-        if st["fc_n"] > 0 and (a in scandal_firm_keys or b in scandal_firm_keys):
-            if a in fc_firm_keys and b in fc_firm_keys:
-                hop.add(a)
-                hop.add(b)
-    scandal_firm_keys |= hop
-    # Cap for a readable first-paint graph: keep the highest-value firms.
-    if len(scandal_firm_keys) > 220:
-        scandal_firm_keys = set(sorted(scandal_firm_keys, key=lambda k: firm[k]["val_fc"], reverse=True)[:220])
-        scandal_firm_keys |= {k for k in fc_firm_keys if firm[k]["revoked"]}
-        scandal_firm_keys |= ego_firms
-    scandal_deo_keys = set()
+    scandal_firm_keys |= (NAMED & fc_firm_keys)
+    # Each firm contributes only its top FC district offices; keep offices where
+    # at least two scandal firms concentrate, plus the highest-value few.
+    deo_hits: dict[str, int] = defaultdict(int)
+    deo_val: dict[str, float] = defaultdict(float)
     for k in scandal_firm_keys:
-        for dn, dv in firm[k]["deos"].items():
-            if dv["fc_n"] > 0:
-                scandal_deo_keys.add(dn)
+        tops = sorted(
+            [(dn, dv) for dn, dv in firm[k]["deos"].items() if dv["fc_n"] > 0 and dn in fc_deo_keys],
+            key=lambda x: x[1]["fc_val"], reverse=True)[:6]
+        for dn, dv in tops:
+            deo_hits[dn] += 1
+            deo_val[dn] += dv["fc_val"]
+    scandal_deo_keys = {dn for dn, h in deo_hits.items() if h >= 2}
+    extra = sorted([dn for dn in deo_hits if dn not in scandal_deo_keys],
+                   key=lambda d: deo_val[d], reverse=True)[:36]
+    scandal_deo_keys |= set(extra)
     scandal_deo_keys &= fc_deo_keys
     graph_scandal = build_graph_json(scandal_firm_keys, scandal_deo_keys, include_colocated=True)
 

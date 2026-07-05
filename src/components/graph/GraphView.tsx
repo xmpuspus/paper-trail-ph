@@ -5,7 +5,6 @@ import { SigmaContainer, useLoadGraph, useRegisterEvents, useSigma } from "@reac
 import "@react-sigma/core/lib/react-sigma.min.css";
 import Graph from "graphology";
 import forceAtlas2 from "graphology-layout-forceatlas2";
-import circlepack from "graphology-layout/circlepack";
 import { NodeCircleProgram } from "sigma/rendering";
 import { NodeSquareProgram } from "@sigma/node-square";
 import EdgeCurveProgram from "@sigma/edge-curve";
@@ -87,7 +86,7 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
       if (graph.hasEdge(e.source, e.target)) return;
       const derived = e.tier === "derived";
       graph.addEdgeWithKey(e.id, e.source, e.target, {
-        size: derived ? 0.6 : Math.max(0.7, Math.min(3.2, Math.log10((e.weight || 1) + 1) * 1.8)),
+        size: derived ? 0.45 : Math.max(0.35, Math.min(1.5, Math.log10((e.weight || 1) + 1) * 0.9)),
         color: derived ? C.tierDerived : C.tierRecorded,
         type: derived ? "curved" : "straight",
         tier: e.tier,
@@ -95,29 +94,19 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
       });
     });
 
-    // Seed positions by pre-computed community so co-award clusters group, then
-    // let ForceAtlas2 refine within and between clusters.
-    if (graph.order > 2) {
-      try {
-        circlepack.assign(graph, { hierarchyAttributes: ["community"], scale: 900 });
-      } catch {
-        graph.forEachNode((n) => {
-          graph.setNodeAttribute(n, "x", (Math.random() - 0.5) * 1000);
-          graph.setNodeAttribute(n, "y", (Math.random() - 0.5) * 1000);
-        });
-      }
-    }
+    // Organic force-directed layout (no community pre-packing, which produced
+    // tight circular clumps). Random seed positions were set on each node.
     loadGraph(graph);
     forceAtlas2.assign(graph, {
-      iterations: 120,
+      iterations: 300,
       settings: {
-        gravity: 1,
-        scalingRatio: 60,
+        gravity: 0.6,
+        scalingRatio: 14,
         linLogMode: true,
         adjustSizes: true,
-        slowDown: 8,
+        slowDown: 6,
         barnesHutOptimize: true,
-        strongGravityMode: true,
+        outboundAttractionDistribution: true,
       },
     });
     sigma.refresh();

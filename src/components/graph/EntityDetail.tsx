@@ -5,6 +5,13 @@ import type { Entity, Overlay, InNews, OverlayPerson } from "@/lib/types";
 import { ACTION_META } from "@/lib/tiers";
 import { peso, pesoFull, num, shortDate } from "@/lib/format";
 
+const TONE: Record<string, { chip: string; border: string }> = {
+  action: { chip: "chip-signal", border: "border-signal/40" },
+  alleged: { chip: "chip-alert", border: "border-alert/40" },
+  note: { chip: "chip", border: "border-hairline" },
+  cleared: { chip: "chip-good", border: "border-good/40" },
+};
+
 interface Props {
   entity: Entity | null;
   overlay: Overlay | null;
@@ -121,11 +128,11 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
               {ov.actions.map((a, i) => {
                 const meta = ACTION_META[a.type];
                 const src = source(a.source);
-                const alleged = meta?.tone === "alleged";
+                const t = TONE[meta?.tone ?? "note"];
                 return (
-                  <li key={i} className={`rounded-lg border p-3 ${alleged ? "border-alert/40" : "border-signal/40"}`}>
+                  <li key={i} className={`rounded-lg border p-3 ${t.border}`}>
                     <div className="mb-1 flex items-center gap-2">
-                      <span className={`chip ${alleged ? "chip-alert" : "chip-signal"}`}>{meta?.label ?? a.type}</span>
+                      <span className={`chip ${t.chip}`}>{meta?.label ?? a.type}</span>
                       <span className="text-[11px] text-text-muted">{shortDate(a.date)}</span>
                     </div>
                     <p className="text-sm leading-relaxed text-text-secondary">{a.label}</p>

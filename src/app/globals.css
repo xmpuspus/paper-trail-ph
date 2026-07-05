@@ -3,104 +3,94 @@
 @tailwind utilities;
 
 /*
-  Paper Trail PH design system: "Waterline / ledger".
-  Deep-water navy ink base, institutional IBM Plex, Archivo display,
-  monospace ledger figures. Color encodes node type + recorded status;
-  edge line style encodes confidence tier. No glassmorphism, no gradients.
+  Paper Trail PH design system. Light-first, editorial, calm: a research-lab
+  reading surface, not a dashboard. One clean sans (Figtree), monospace only
+  for figures and record ids. Near-monochrome with sparing, meaningful colour.
+  Colour still encodes node type + recorded status; edge style encodes tier.
 */
 
 @layer base {
   :root {
-    /* --- Light mode: paper ledger --- */
-    --page: #f5f7fa;
+    /* Light (primary) */
+    --page: #ffffff;
     --surface: #ffffff;
-    --surface-2: #eef2f7;
-    --surface-3: #e6ecf3;
-    --hairline: #d7e0ea;
-    --hairline-strong: #c2cedd;
-    --text-primary: #0e1726;
-    --text-secondary: #46586e;
-    --text-muted: #667891;
-    --input-bg: #eef2f7;
+    --surface-2: #f6f7f8;
+    --surface-3: #eef0f2;
+    --hairline: #e4e7ea;
+    --hairline-strong: #d3d7dc;
+    --text-primary: #1c1e21;
+    --text-secondary: #4b5158;
+    --text-muted: #757b83;
+    --input-bg: #ffffff;
 
-    --accent: #2a6bd6;         /* PH structural blue: procuring entities */
-    --accent-hover: #1f57b8;
-    --water: #147d8e;          /* derived / inferred (water motif) */
-    --signal: #a86a12;         /* recorded official action (high-water mark) */
-    --alert: #c0432c;          /* charged / pending (restrained) */
-    --good: #0f7a3d;
+    --accent: #1a56db;          /* calm structural blue: links, procuring entities */
+    --accent-hover: #1442b0;
+    --water: #0f7d8c;           /* derived / inferred (water motif) */
+    --signal: #a5610a;          /* recorded official action (high-water mark) */
+    --alert: #b3341d;           /* charge / pending (restrained) */
+    --good: #127a43;
 
-    /* Graph */
-    --graph-bg: #eef2f7;
-    --graph-label: #46586e;
-    --node-contractor: #6b7c92;   /* neutral until a status tints it */
-    --node-entity: #2a6bd6;
-    --tier-recorded: #55697f;
+    --graph-bg: #fafbfc;
+    --graph-label: #4b5158;
+    --node-contractor: #9aa2ab;
+    --node-entity: #1a56db;
+    --tier-recorded: #59616b;
     --tier-derived: #2a97a8;
-    --tier-namesake: #9aa8bb;
+    --tier-namesake: #aab2bb;
 
-    --scrollbar-thumb: rgba(14, 23, 38, 0.16);
-    --scrollbar-thumb-hover: rgba(14, 23, 38, 0.28);
-    --focus-ring: #2a6bd6;
+    --scrollbar-thumb: rgba(28, 30, 33, 0.18);
+    --scrollbar-thumb-hover: rgba(28, 30, 33, 0.30);
+    --focus-ring: #1a56db;
 
     /* categorical community palette (validated, light surface) */
     --cat-1: #2a78d6; --cat-2: #1baf7a; --cat-3: #b07d00; --cat-4: #008300;
     --cat-5: #4a3aa7; --cat-6: #d43b3a; --cat-7: #c25a86; --cat-8: #c25226;
-    --cat-other: #8595a8;
+    --cat-other: #9aa2ab;
   }
 
   [data-theme="dark"] {
-    /* --- Dark mode: deep water (default) --- */
-    --page: #0a1017;
-    --surface: #0f1826;
-    --surface-2: #152233;
-    --surface-3: #1c2c40;
-    --hairline: #24374f;
-    --hairline-strong: #33496640;
-    --text-primary: #e8eef6;
-    --text-secondary: #a2b4ca;
-    --text-muted: #7d92ab;
-    --input-bg: #15222f;
+    /* Dark (secondary): neutral ink, not navy-dashboard */
+    --page: #101215;
+    --surface: #16181c;
+    --surface-2: #1c1f24;
+    --surface-3: #23272d;
+    --hairline: #2a2f36;
+    --hairline-strong: #3a414a;
+    --text-primary: #e9ebee;
+    --text-secondary: #aab1ba;
+    --text-muted: #7d858f;
+    --input-bg: #16181c;
 
-    --accent: #4a90f0;
-    --accent-hover: #6ba4f5;
-    --water: #38b2c4;
-    --signal: #e8a33d;
-    --alert: #ee6b52;
+    --accent: #6c9bff;
+    --accent-hover: #8db0ff;
+    --water: #35b6c6;
+    --signal: #e0a23e;
+    --alert: #ec6a4f;
     --good: #35c07a;
 
-    --graph-bg: #0a1017;
-    --graph-label: #a2b4ca;
-    --node-contractor: #8aa0bb;
-    --node-entity: #4a90f0;
-    --tier-recorded: #9db2cc;
-    --tier-derived: #38b2c4;
-    --tier-namesake: #5f7793;
+    --graph-bg: #0e1013;
+    --graph-label: #aab1ba;
+    --node-contractor: #8b95a1;
+    --node-entity: #6c9bff;
+    --tier-recorded: #9aa5b2;
+    --tier-derived: #35b6c6;
+    --tier-namesake: #5c6672;
 
-    --scrollbar-thumb: rgba(232, 238, 246, 0.12);
-    --scrollbar-thumb-hover: rgba(232, 238, 246, 0.22);
-    --focus-ring: #6ba4f5;
+    --scrollbar-thumb: rgba(233, 235, 238, 0.14);
+    --scrollbar-thumb-hover: rgba(233, 235, 238, 0.26);
+    --focus-ring: #8db0ff;
 
-    /* categorical community palette (validated, navy dark surface) */
-    --cat-1: #3987e5; --cat-2: #199e70; --cat-3: #c98500; --cat-4: #33a533;
-    --cat-5: #9085e9; --cat-6: #e66767; --cat-7: #d55181; --cat-8: #d95926;
-    --cat-other: #6d829b;
+    --cat-1: #5aa0f0; --cat-2: #35c08a; --cat-3: #d29a2a; --cat-4: #46b846;
+    --cat-5: #9d92f0; --cat-6: #ec6a6a; --cat-7: #d97aa4; --cat-8: #e07648;
+    --cat-other: #6c7681;
   }
 
-  * {
-    border-color: var(--hairline);
-  }
+  * { border-color: var(--hairline); }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
 
   body {
@@ -108,125 +98,72 @@
     color: var(--text-primary);
     font-family: var(--font-body), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Visible keyboard focus everywhere (accessibility). */
-  :focus-visible {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: 2px;
-    border-radius: 3px;
+  :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 3px; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-body), system-ui, sans-serif;
+    letter-spacing: -0.018em;
+    color: var(--text-primary);
   }
 
-  h1, h2, h3, .font-display {
-    font-family: var(--font-display), var(--font-body), system-ui, sans-serif;
-    letter-spacing: -0.01em;
-  }
-
-  .tabular {
-    font-variant-numeric: tabular-nums;
-    font-family: var(--font-mono), ui-monospace, monospace;
-  }
+  .tabular { font-variant-numeric: tabular-nums; font-family: var(--font-mono), ui-monospace, monospace; }
 
   .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb); border-radius: 4px;
-  }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
-  .skip-link {
-    position: absolute; left: -9999px; top: 0; z-index: 200;
-    background: var(--accent); color: #fff; padding: 10px 16px; border-radius: 0 0 6px 0;
-  }
+  .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; background: var(--accent); color: #fff; padding: 10px 16px; }
   .skip-link:focus { left: 0; }
 }
 
 @layer components {
-  .panel {
-    background-color: var(--surface);
-    border: 1px solid var(--hairline);
-    border-radius: 10px;
-  }
-  .panel-2 {
-    background-color: var(--surface-2);
-    border: 1px solid var(--hairline);
-    border-radius: 8px;
-  }
+  /* A quiet eyebrow: sentence case, subtle, not tracked-uppercase. */
+  .eyebrow { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: 0; }
+  .eyebrow-muted { font-size: 13px; font-weight: 500; color: var(--text-muted); }
 
-  /* The waterline: signature rule that reads as a rising water level. */
-  .waterline {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--water) 20%, var(--water) 80%, transparent);
-    opacity: 0.55;
-  }
+  .panel { background-color: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+  .panel-2 { background-color: var(--surface-2); border: 1px solid var(--hairline); border-radius: 10px; }
 
-  .eyebrow {
-    font-family: var(--font-mono), monospace;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
+  /* The waterline: the one signature rule, a rising water level. */
+  .waterline { height: 1px; background: var(--hairline); }
+  .waterline-mark { height: 2px; background: var(--signal); opacity: .5; border-radius: 2px; }
 
-  .stat-tile {
-    background-color: var(--surface);
-    border: 1px solid var(--hairline);
-    border-radius: 10px;
-    padding: 18px 20px;
-  }
-  .stat-value {
-    font-family: var(--font-display), sans-serif;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-  }
+  .figure { font-family: var(--font-body); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1; }
 
   .chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 3px 9px; border-radius: 999px;
-    font-size: 11.5px; font-weight: 500;
-    border: 1px solid var(--hairline-strong);
-    color: var(--text-secondary);
-    background: var(--surface-2);
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; border: 1px solid var(--hairline-strong); color: var(--text-secondary); background: var(--surface);
   }
-  .chip-signal { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 45%, transparent); background: color-mix(in srgb, var(--signal) 12%, transparent); }
-  .chip-alert  { color: var(--alert);  border-color: color-mix(in srgb, var(--alert) 45%, transparent);  background: color-mix(in srgb, var(--alert) 12%, transparent); }
-  .chip-water  { color: var(--water);  border-color: color-mix(in srgb, var(--water) 45%, transparent);  background: color-mix(in srgb, var(--water) 12%, transparent); }
-  .chip-good   { color: var(--good);   border-color: color-mix(in srgb, var(--good) 45%, transparent);   background: color-mix(in srgb, var(--good) 12%, transparent); }
+  .chip-signal { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 40%, transparent); background: color-mix(in srgb, var(--signal) 8%, transparent); }
+  .chip-alert  { color: var(--alert);  border-color: color-mix(in srgb, var(--alert) 40%, transparent);  background: color-mix(in srgb, var(--alert) 8%, transparent); }
+  .chip-water  { color: var(--water);  border-color: color-mix(in srgb, var(--water) 40%, transparent);  background: color-mix(in srgb, var(--water) 8%, transparent); }
+  .chip-good   { color: var(--good);   border-color: color-mix(in srgb, var(--good) 40%, transparent);   background: color-mix(in srgb, var(--good) 8%, transparent); }
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
-    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
-    cursor: pointer;
-  }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 500; transition: background-color .15s ease, border-color .15s ease, color .15s ease; cursor: pointer; }
   .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
   .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
-  .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--hairline); }
-  .btn-ghost:hover { background: var(--surface-2); color: var(--text-primary); }
+  .btn-ghost { background: transparent; color: var(--text-primary); border: 1px solid var(--hairline-strong); }
+  .btn-ghost:hover { background: var(--surface-2); }
 
-  .link-source {
-    color: var(--accent); text-decoration: underline; text-underline-offset: 2px;
-    text-decoration-thickness: 1px;
-  }
-  .link-source:hover { color: var(--accent-hover); }
+  .link-source { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+  .link-source:hover { border-bottom-color: var(--accent); }
 
-  .search-input {
-    width: 100%; border-radius: 8px; padding: 11px 14px; font-size: 14px;
-    background-color: var(--input-bg); border: 1px solid var(--hairline);
-    color: var(--text-primary);
-  }
+  .search-input { width: 100%; border-radius: 10px; padding: 13px 16px; font-size: 15px; background-color: var(--input-bg); border: 1px solid var(--hairline-strong); color: var(--text-primary); }
   .search-input::placeholder { color: var(--text-muted); }
-  .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
 }
 
-/* Ledger-style source/answer markdown reused by the chat + methodology. */
-.prose-ledger h2 { font-family: var(--font-display), sans-serif; font-size: 15px; font-weight: 700; margin: 18px 0 8px; color: var(--text-primary); }
-.prose-ledger h3 { font-size: 13px; font-weight: 600; margin: 12px 0 6px; color: var(--text-primary); }
-.prose-ledger p { margin-bottom: 10px; line-height: 1.6; color: var(--text-secondary); }
-.prose-ledger ul, .prose-ledger ol { padding-left: 20px; margin-bottom: 10px; color: var(--text-secondary); }
-.prose-ledger li { margin-bottom: 5px; }
-.prose-ledger a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+/* Long-form reading (methodology, chat). */
+.prose-ledger h2 { font-size: 15px; font-weight: 700; margin: 18px 0 8px; color: var(--text-primary); }
+.prose-ledger h3 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: var(--text-primary); }
+.prose-ledger p { margin-bottom: 12px; line-height: 1.65; color: var(--text-secondary); }
+.prose-ledger ul, .prose-ledger ol { padding-left: 20px; margin-bottom: 12px; color: var(--text-secondary); }
+.prose-ledger li { margin-bottom: 6px; line-height: 1.6; }
+.prose-ledger a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); text-decoration: none; }
 .prose-ledger code { background: var(--surface-2); color: var(--text-primary); border-radius: 4px; padding: 1px 6px; font-size: 12px; font-family: var(--font-mono), monospace; }
 .prose-ledger strong { font-weight: 600; color: var(--text-primary); }
 

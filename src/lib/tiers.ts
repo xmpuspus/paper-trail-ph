@@ -57,7 +57,10 @@ export const STATUS: Record<StatusKey, StatusStyle> = {
   normal: { key: "normal", label: "Contractor (no flag on record)", cssVar: "--node-contractor" },
 };
 
-const ALLEGED = new Set(["charged_pending", "flagged_review", "lookout_order"]);
+const ALLEGED = new Set([
+  "charged_pending", "flagged_review", "lookout_order",
+  "amlc_freeze", "under_investigation", "capitalization_flag", "performance_flag",
+]);
 const ACTION = new Set(["license_revoked", "blacklisted", "sec_cancelled"]);
 
 export function nodeStatus(
@@ -78,13 +81,20 @@ export function nodeStatus(
 }
 
 // Human labels + tone for each curated overlay action type.
-export const ACTION_META: Record<string, { label: string; tone: "action" | "alleged" }> = {
+export type ActionTone = "action" | "alleged" | "note" | "cleared";
+export const ACTION_META: Record<string, { label: string; tone: ActionTone }> = {
   license_revoked: { label: "License revoked", tone: "action" },
   sec_cancelled: { label: "SEC registration cancelled", tone: "action" },
   blacklisted: { label: "Blacklisted", tone: "action" },
   charged_pending: { label: "Charged (case pending)", tone: "alleged" },
   flagged_review: { label: "Flagged in audit", tone: "alleged" },
-  lookout_order: { label: "Lookout order", tone: "alleged" },
+  lookout_order: { label: "Immigration lookout order", tone: "alleged" },
+  amlc_freeze: { label: "Assets frozen (AMLC)", tone: "alleged" },
+  under_investigation: { label: "Under investigation", tone: "alleged" },
+  capitalization_flag: { label: "Capitalization questioned", tone: "alleged" },
+  performance_flag: { label: "Project performance questioned", tone: "alleged" },
+  political_tie: { label: "Political / campaign-finance tie", tone: "note" },
+  cleared: { label: "Cleared by regulator", tone: "cleared" },
 };
 
 // Honest size: node radius scales with recorded flood-control contract value.

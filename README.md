@@ -23,7 +23,7 @@ Every figure below is computed from the source data and reconciled across the si
 - **6,558** distinct firms, resolved from the raw contractor field, and **220** district engineering offices.
 - **8** firms carry a `[REVOKED]` license tag in the DPWH data, across **3,902** contracts worth **₱182B** (that same tag appears on 256 raw contractor strings, which a naive count would report as 256 firms).
 - **20** flood-control district offices are highly concentrated (Herfindahl-Hirschman Index above 2,500, the US DOJ threshold).
-- Sunwest, Inc. holds the highest recorded flood-control value at **₱32.83B**; Topnotch Catalyst Builders Inc. (the demo target) resolves to one node at **285 contracts / ₱17.41B**.
+- Sunwest, Inc. holds the highest recorded flood-control value at **₱32.83B**. Topnotch Catalyst Builders Inc. (the demo target) resolves to one node at **285 contracts / ₱17.41B**.
 
 ## Confidence tiers
 
@@ -31,21 +31,21 @@ An inferred link never looks like a recorded one.
 
 - **Recorded** (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.
 - **Inferred from records** (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.
-- **Possible namesake** (faintest): a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.
+- **Possible namesake** (faintest): a shared surname is not a relationship. Not shown in this release. Reserved for a future human-verified layer.
 
 The scandal overlay (owners, license revocations, charges) is primary-source-or-omit: an entry enters the graph only if it traces to a primary or primary-citing source (PCAB Board Resolution 075, Ombudsman and Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions). Firms without a confirmed action carry recorded facts only. Sources are in `public/data/overlay.json`.
 
 ## Data sources
 
 - **DPWH contracts:** DPWH Transparency Portal via BetterGov.PH, published on HuggingFace as [`bettergovph/dpwh-transparency-data`](https://huggingface.co/datasets/bettergovph/dpwh-transparency-data). License CC0 1.0 Universal (public domain).
-- **Official actions:** curated and source-linked from PCAB, the Ombudsman and Sandiganbayan, DPWH, COA, and SEC.
+- **Official actions:** compiled and source-linked from PCAB, the Ombudsman and Sandiganbayan, DPWH, COA, and SEC.
 - **News tagging:** recent coverage (GDELT plus PH outlets) matched by exact firm name to the verified scandal set, each linking its source article.
 
 Full source list with access notes is in [DATA_SOURCES.md](DATA_SOURCES.md).
 
 ## How it is built
 
-v1 is a static site. There is no database or backend at runtime; all data is baked to JSON at build time.
+v1 is a static site. There is no database or backend at runtime. All data is baked to JSON at build time.
 
 ```
 DPWH parquet ──▶ scripts/build_graph.py ──▶ public/data/*.json ──▶ Next.js (static) ──▶ Vercel
@@ -67,7 +67,7 @@ npm run dev            # http://localhost:3000
 python3 scripts/build_graph.py
 ```
 
-The parquet is pulled by `scripts/collectors/dpwh.py`. Neo4j is optional and only used as an offline exploration step; it is not required to run or build the site.
+The parquet is pulled by `scripts/collectors/dpwh.py`. Neo4j is optional and only used as an offline exploration step. It is not required to run or build the site.
 
 ## Related projects
 

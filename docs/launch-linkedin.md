@@ -1,6 +1,6 @@
 # LinkedIn launch draft
 
-Format: news hook first, checkable artifact, one repeatable number, honest-caveat voice, link in the first comment. Leads with the cartel and the "who won the most" question, not an individual as the tool's verdict.
+Format: news hook first, checkable artifact, one repeatable number, honest-caveat voice, link in the first comment. Leads with the cartel and the "who won the most" question, and does not cast an individual as the tool's verdict.
 
 ---
 

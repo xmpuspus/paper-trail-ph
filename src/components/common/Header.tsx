@@ -1,7 +1,8 @@
 "use client";
 
-import { Drop, ArrowSquareOut } from "@phosphor-icons/react";
+import { ArrowSquareOut } from "@phosphor-icons/react";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import LogoMark from "@/components/common/LogoMark";
 
 const NAV = [
   { href: "#story", label: "The record" },
@@ -17,7 +18,7 @@ export default function Header() {
     >
       <div className="mx-auto flex max-w-content flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 md:px-6">
         <a href="#main" className="flex items-center gap-2">
-          <Drop size={20} weight="fill" className="text-accent" />
+          <LogoMark size={20} className="text-accent" />
           <span className="font-display text-[17px] font-bold tracking-tight text-text-primary">Paper Trail PH</span>
           <span className="hidden text-xs text-text-muted sm:inline">· DPWH flood-control records</span>
         </a>

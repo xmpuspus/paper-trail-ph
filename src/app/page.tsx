@@ -41,7 +41,7 @@ export default function Home() {
           </div>
 
           <div className="mt-16 md:mt-24">
-            <Analysis temporal={temporal} signals={signals} predicted={predicted} />
+            <Analysis temporal={temporal} signals={signals} predicted={predicted} graph={scandalGraph} overlay={overlay} inNews={inNews} />
           </div>
 
           <div className="mt-16 md:mt-24">

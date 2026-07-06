@@ -126,15 +126,21 @@ def main() -> None:
     # ---- Pass 2: aggregate per firm and per district office (procuring entity).
     firm = defaultdict(lambda: {
         "id": None, "name": None, "revoked": False, "former": None,
-        "n_all": 0, "val_all": 0.0, "n_fc": 0, "val_fc": 0.0,
-        "deos": defaultdict(lambda: {"n": 0, "val": 0.0, "fc_n": 0, "fc_val": 0.0}),
+        "n_all": 0, "val_all": 0.0, "n_fc": 0, "val_fc": 0.0, "fc_first": None,
+        "deos": defaultdict(lambda: {"n": 0, "val": 0.0, "fc_n": 0, "fc_val": 0.0, "fc_first": None}),
         "regions": set(), "years": set(), "categories": defaultdict(int),
     })
     deo = defaultdict(lambda: {
         "name": None, "region": None, "n_all": 0, "val_all": 0.0,
-        "n_fc": 0, "val_fc": 0.0, "firm_fc_val": defaultdict(float),
+        "n_fc": 0, "val_fc": 0.0, "fc_first": None, "firm_fc_val": defaultdict(float),
     })
-    co_award = defaultdict(lambda: {"n": 0, "val": 0.0, "fc_n": 0})  # (a,b)->stats
+    co_award = defaultdict(lambda: {"n": 0, "val": 0.0, "fc_n": 0, "fc_first": None})  # (a,b)->stats
+
+    def earlier(cur, y):
+        """Min year, ignoring None / unparseable."""
+        if y is None:
+            return cur
+        return y if cur is None or y < cur else cur
 
     loc = df["location"].tolist()
     cats = df["category"].astype(str).tolist()
@@ -159,6 +165,12 @@ def main() -> None:
         is_fc = cats[i] == FC_CATEGORY
         b = float(budgets[i] or 0.0)
         yr = years[i]
+        try:
+            yr_int = int(yr)
+            if not (2000 <= yr_int <= 2035):
+                yr_int = None
+        except (TypeError, ValueError):
+            yr_int = None
 
         drec = deo[deo_name]
         drec["name"] = deo_name
@@ -168,6 +180,7 @@ def main() -> None:
         if is_fc:
             drec["n_fc"] += 1
             drec["val_fc"] += b
+            drec["fc_first"] = earlier(drec["fc_first"], yr_int)
 
         seen = set()
         for k, f in keys:
@@ -190,8 +203,10 @@ def main() -> None:
             if is_fc:
                 fr["n_fc"] += 1
                 fr["val_fc"] += b
+                fr["fc_first"] = earlier(fr["fc_first"], yr_int)
                 d["fc_n"] += 1
                 d["fc_val"] += b
+                d["fc_first"] = earlier(d["fc_first"], yr_int)
                 drec["firm_fc_val"][k] += b
 
         # Recorded co-award (joint venture) edges among all firms on this contract.
@@ -203,6 +218,7 @@ def main() -> None:
                 co_award[pair]["val"] += b
                 if is_fc:
                     co_award[pair]["fc_n"] += 1
+                    co_award[pair]["fc_first"] = earlier(co_award[pair]["fc_first"], yr_int)
 
     print(f"Resolved {len(firm)} firms, {len(deo)} district offices.")
 
@@ -269,6 +285,7 @@ def main() -> None:
             "fc_value": round(v["val_fc"], 2),
             "n_regions": len(v["regions"]),
             "n_deos": len(v["deos"]),
+            "first_year": v["fc_first"],
             "community": node_comm.get(nd),
             "betweenness": round(btw.get(nd, 0.0), 6),
             "pagerank": round(pr.get(nd, 0.0), 6),
@@ -295,6 +312,7 @@ def main() -> None:
             "hhi_fc": v["hhi_fc"],
             "concentrated": v["hhi_fc"] > HHI_HIGH,
             "n_fc_firms": v["n_fc_firms"],
+            "first_year": v["fc_first"],
             "community": node_comm.get(nd),
             "betweenness": round(btw.get(nd, 0.0), 6),
             "degree": deg.get(nd, 0),
@@ -317,6 +335,7 @@ def main() -> None:
                         "source": fid[k], "target": did[dname],
                         "type": "AWARDED_TO", "tier": "recorded",
                         "weight": dd["fc_n"], "value": round(dd["fc_val"], 2),
+                        "first_year": dd.get("fc_first"),
                         "label": f"{dd['fc_n']} flood-control contracts",
                     })
         # recorded CO_AWARDED (JV)
@@ -327,6 +346,7 @@ def main() -> None:
                     "source": fid[a], "target": fid[b],
                     "type": "CO_AWARDED_WITH", "tier": "recorded",
                     "weight": st["fc_n"],
+                    "first_year": st.get("fc_first"),
                     "label": f"joint awardee on {st['fc_n']} flood-control contracts",
                 })
         # derived CO_LOCATED (dashed): firm pairs sharing >=3 DEOs, both sizeable.

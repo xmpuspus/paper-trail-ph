@@ -31,6 +31,7 @@ export interface GraphNode {
   betweenness?: number;
   pagerank?: number;
   degree?: number;
+  first_year?: number | null;
   top_deos?: TopDeo[];
   // procuring entity
   region?: string;
@@ -52,6 +53,7 @@ export interface GraphEdge {
   tier: Tier;
   weight: number;
   value?: number;
+  first_year?: number | null;
   label: string;
 }
 

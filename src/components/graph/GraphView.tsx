@@ -115,6 +115,7 @@ function GraphLoader({ data, colorBy, showDerived, showPredicted = false, overla
         type: derived || predicted ? "curved" : "straight",
         tier: e.tier,
         elabel,
+        w: e.weight || 1,
         hidden: (derived && !showDerived) || (predicted && !showPredicted),
       });
     });
@@ -196,8 +197,13 @@ function GraphLoader({ data, colorBy, showDerived, showPredicted = false, overla
     sigma.setSetting("edgeReducer", (id, d) => {
       if (!focus) return d;
       const [s, t] = graph.extremities(id);
-      if (s === focus || t === focus)
-        return { ...d, color: C.focusEdge, zIndex: 2, size: Math.max((d.size as number) || 0.6, 2), label: d.elabel as string };
+      if (s === focus || t === focus) {
+        // On focus, width scales with the number of contracts (sqrt, clamped),
+        // so a 50-contract award reads thicker than a 3-contract one.
+        const w = (d.w as number) || 1;
+        const size = Math.max(1, Math.min(7, Math.sqrt(w) * 0.85));
+        return { ...d, color: C.focusEdge, zIndex: 2, size, label: d.elabel as string };
+      }
       return { ...d, hidden: true };
     });
     sigma.refresh({ skipIndexation: true });

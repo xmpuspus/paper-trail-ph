@@ -1,5 +1,6 @@
-import type { TemporalData, SignalsData, PredictedTies } from "@/lib/types";
+import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews } from "@/lib/types";
 import { peso } from "@/lib/format";
+import GraphTimeline from "@/components/graph/GraphTimeline";
 
 // Server-rendered network-analysis section: how the flood-control network
 // formed year by year, the structural patterns in the record, and the
@@ -10,6 +11,9 @@ interface Props {
   temporal: TemporalData;
   signals: SignalsData;
   predicted: PredictedTies;
+  graph: GraphData;
+  overlay: Overlay;
+  inNews: InNews;
 }
 
 const W = 260;
@@ -84,7 +88,7 @@ function BarChart({
   );
 }
 
-export default function Analysis({ temporal, signals, predicted }: Props) {
+export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews }: Props) {
   const ys = temporal.years;
   const years = ys.map((y) => y.year);
   const first = ys[0];
@@ -107,6 +111,11 @@ export default function Analysis({ temporal, signals, predicted }: Props) {
           the market closed to newcomers, and the joint-venture web consolidated. Every figure below is
           computed from the contract record. {temporal._meta.disclaimer}
         </p>
+      </div>
+
+      {/* The replay: the actual network forming, not a trend line. */}
+      <div className="mb-10">
+        <GraphTimeline data={graph} overlay={overlay} inNews={inNews} />
       </div>
 
       {/* Small multiples: one job per chart, no dual axes. */}

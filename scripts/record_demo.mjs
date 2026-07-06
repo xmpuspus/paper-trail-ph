@@ -1,8 +1,11 @@
-// Records the README demo GIF: hero, the network replay forming 2016 -> 2025,
-// then a firm's weighted award links. Viewport is tall enough to keep the whole
-// replay canvas in frame (it is ~0.66 of the width). Output webm -> ffmpeg GIF.
+// Records the Paper Trail PH walkthrough for the README GIF and the LinkedIn
+// video. Deliberately paced with holds on each beat so a viewer can read the
+// numbers and see each feature, rather than flashing past.
 //
 //   node scripts/record_demo.mjs   (with the site on http://localhost:3100)
+//
+// Produces a webm in tmp/gif/. Post-process to MP4 (LinkedIn) and GIF (README)
+// with the ffmpeg commands in the repo (see the demo build step).
 import { chromium } from "playwright";
 
 const b = await chromium.launch();
@@ -12,39 +15,48 @@ const ctx = await b.newContext({
   deviceScaleFactor: 1,
 });
 const p = await ctx.newPage();
+const hold = (ms) => p.waitForTimeout(ms);
+const toTop = (sel, off) => p.evaluate(([s, o]) => {
+  const el = document.querySelector(s);
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - o, behavior: "instant" });
+}, [sel, off]);
+
 await p.goto("http://localhost:3100/", { waitUntil: "domcontentloaded" });
-await p.waitForTimeout(1600); // hero: the numbers
+await hold(3200); // BEAT 1: hero, let the headline numbers register
 
-// show the section heading briefly, then bring the whole replay figure into frame
-await p.evaluate(() => document.querySelector("#analysis").scrollIntoView({ block: "start" }));
-await p.waitForTimeout(900);
-await p.evaluate(() => {
-  // clear the sticky header so the year + counters row is fully visible
-  const f = document.querySelector("#analysis figure");
-  window.scrollTo(0, f.getBoundingClientRect().top + window.scrollY - 72);
-});
-await p.waitForTimeout(500);
-
-// clean start at 2016, then play the growth
+// BEAT 2: the network forming, year by year
+await toTop("#analysis", 72);
+await hold(1200);
+await toTop("#analysis figure", 72);
+await hold(600);
 await p.locator('#analysis input[aria-label="Year"]').fill("2016");
-await p.waitForTimeout(250);
+await hold(300);
 await p.locator('#analysis button[aria-label="Play"]').first().click().catch(() => {});
-await p.waitForTimeout(15600); // full replay 2016 -> 2025
+await hold(16500); // full replay 2016 -> 2025 at natural pace
+await hold(2200);  // hold on the finished network
 
-// weighted edges in the explorer
-await p.evaluate(() => document.querySelector("#explore").scrollIntoView({ block: "start" }));
-await p.waitForTimeout(700);
+// BEAT 3: the validated temporal analysis (the differentiator)
+await p.evaluate(() => {
+  const h = [...document.querySelectorAll("#analysis h3")].find((e) => /Temporal knowledge graph/i.test(e.textContent));
+  window.scrollTo({ top: h.getBoundingClientRect().top + window.scrollY - 72, behavior: "instant" });
+});
+await hold(5200); // read the AUC-vs-null and consolidation charts
+
+// BEAT 4: a firm's record with award links weighted by contract count
+await toTop("#explore", 72);
+await hold(1000);
 const inp = p.locator('input[role="combobox"]').first();
 await inp.click();
-await inp.type("sunwest", { delay: 45 });
-await p.waitForTimeout(400);
+await inp.type("sunwest", { delay: 55 });
+await hold(600);
 await inp.press("ArrowDown");
 await inp.press("Enter");
-await p.waitForTimeout(900);
+await hold(1100);
 const box = await p.locator("#explore canvas").first().boundingBox();
 await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-await p.mouse.wheel(0, -220);
-await p.waitForTimeout(2200);
+await p.mouse.wheel(0, -230);
+await hold(4200); // hold on the weighted, labelled edges + the record panel
+await hold(800);
 
 const vpath = await p.video().path();
 await ctx.close();

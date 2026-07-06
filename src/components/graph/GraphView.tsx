@@ -93,11 +93,20 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
       if (!graph.hasNode(e.source) || !graph.hasNode(e.target)) return;
       if (graph.hasEdge(e.source, e.target)) return;
       const derived = e.tier === "derived";
+      // A concise label, shown only when an endpoint is focused (see edgeReducer).
+      // The full sentence lives in the entity detail; on-canvas it stays short.
+      const elabel =
+        e.type === "CO_AWARDED_WITH"
+          ? "joint venture"
+          : e.type === "CO_LOCATED"
+            ? `${e.weight} shared offices`
+            : `${e.weight} contract${e.weight === 1 ? "" : "s"}`;
       graph.addEdgeWithKey(e.id, e.source, e.target, {
         size: derived ? 0.45 : Math.max(0.35, Math.min(1.5, Math.log10((e.weight || 1) + 1) * 0.9)),
         color: derived ? C.tierDerived : C.tierRecorded,
         type: derived ? "curved" : "straight",
         tier: e.tier,
+        elabel,
         hidden: derived && !showDerived,
       });
     });
@@ -175,7 +184,8 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
     sigma.setSetting("edgeReducer", (id, d) => {
       if (!focus) return d;
       const [s, t] = graph.extremities(id);
-      if (s === focus || t === focus) return { ...d, color: C.focusEdge, zIndex: 2, size: Math.max((d.size as number) || 0.6, 2) };
+      if (s === focus || t === focus)
+        return { ...d, color: C.focusEdge, zIndex: 2, size: Math.max((d.size as number) || 0.6, 2), label: d.elabel as string };
       return { ...d, hidden: true };
     });
     sigma.refresh({ skipIndexation: true });
@@ -236,6 +246,13 @@ export default function GraphView({ data, colorBy, showDerived, overlay, inNews,
         labelDensity: 0.2,
         labelGridCellSize: 220,
         labelRenderedSizeThreshold: 7,
+        // Edge labels are opt-in per edge: only the focused node's edges carry a
+        // label (set in the edgeReducer), so the dense graph stays readable.
+        renderEdgeLabels: true,
+        edgeLabelFont: "var(--font-body), system-ui, sans-serif",
+        edgeLabelSize: 11,
+        edgeLabelWeight: "500",
+        edgeLabelColor: { color: labelColor },
         zIndex: true,
       }}
     >

@@ -4,7 +4,9 @@ A graph of every DPWH flood-control contract on the public record, the firms tha
 
 **Live:** https://paper-trail-ph.vercel.app
 
-![Paper Trail PH demo](media/papertrail-demo.gif)
+![Paper Trail PH: the DPWH flood-control network forming from 2016 to 2025, then a firm's award links weighted by contract count](media/papertrail-demo.gif)
+
+_The scandal-core network forming year by year (64 firms and 83 links in 2016 to 104 and 498 by 2025), then a firm's record with award links weighted by number of contracts. Recorded with `node scripts/record_demo.mjs` against a local build._
 
 > All data sourced from public records (COA, SEC, DBM, PSA, BSP, SALN disclosures). This tool computes statistical indicators only. Specific allegations, if any, require independent investigation and corroboration. Charges are allegations under the presumption of innocence.
 

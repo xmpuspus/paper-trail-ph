@@ -33,6 +33,11 @@ OUT.mkdir(parents=True, exist_ok=True)
 FC_CATEGORY = "Flood Control and Drainage"
 HHI_HIGH = 2500  # US DOJ "highly concentrated" threshold
 
+# The named scandal firms (DPWH ids), shared with build_analytics.py.
+NAMED = {"34061", "31762", "38958", "39196", "40908", "45914", "49129",
+         "52351", "45002", "49128", "15906", "46535", "48517", "34105",
+         "33234", "22465"}
+
 # Marker parentheticals inside a contractor string: a DPWH id, a revoked tag,
 # or a former-name note. Everything else is part of the name.
 ID_PAREN = re.compile(r"\(\s*(?:\[REVOKED\]\s*)?(\d+)\s*\)")
@@ -351,7 +356,63 @@ def main() -> None:
                             "label": f"inferred from records: both are top awardees in {len(shared)} shared district offices",
                         })
         nodes = list(fnodes.values()) + list(dnodes.values())
-        return {"nodes": nodes, "edges": edges}
+        g = {"nodes": nodes, "edges": edges}
+        attach_persons(g)
+        attach_predicted(g)
+        return g
+
+    # ---- Curated person layer (source-linked in overlay.json) and Node2Vec
+    # predicted ties (build_analytics.py). Persons are recorded, sourced links;
+    # predicted ties are the faintest tier: statistical similarity only.
+    overlay_path = OUT / "overlay.json"
+    persons = []
+    if overlay_path.exists():
+        persons = json.loads(overlay_path.read_text()).get("persons", [])
+    predicted_path = OUT / "predicted-ties.json"
+    predicted_pairs = []
+    if predicted_path.exists():
+        predicted_pairs = json.loads(predicted_path.read_text()).get("pairs", [])
+
+    def attach_persons(g: dict) -> None:
+        firm_id_by_key = {n["key"]: n["id"] for n in g["nodes"] if n["type"] == "Contractor"}
+        for p in persons:
+            linked = [fk for fk in p.get("firms", []) if fk in firm_id_by_key]
+            if not linked:
+                continue
+            g["nodes"].append({
+                "id": p["id"], "key": p["id"], "label": p["name"], "type": "Person",
+                "role": p.get("role"), "status": p.get("status"),
+                "sources": p.get("sources", []), "firms": p.get("firms", []),
+                "n_contracts": 0, "value": 0, "fc_contracts": 0, "fc_value": 0,
+            })
+            for fk in linked:
+                g["edges"].append({
+                    "id": f"pl-{p['id']}-{firm_id_by_key[fk]}",
+                    "source": p["id"], "target": firm_id_by_key[fk],
+                    "type": "PERSON_LINK", "tier": "recorded", "weight": 1,
+                    "label": "person on the record (source-linked)",
+                })
+
+    def attach_predicted(g: dict) -> None:
+        firm_id_by_key = {n["key"]: n["id"] for n in g["nodes"] if n["type"] == "Contractor"}
+        linked = set()
+        for e in g["edges"]:
+            linked.add(frozenset((e["source"], e["target"])))
+        for pr in predicted_pairs:
+            a, b = pr["keys"]
+            if a not in firm_id_by_key or b not in firm_id_by_key:
+                continue
+            ia, ib = firm_id_by_key[a], firm_id_by_key[b]
+            if frozenset((ia, ib)) in linked:
+                continue
+            linked.add(frozenset((ia, ib)))
+            g["edges"].append({
+                "id": f"pt-{ia}-{ib}",
+                "source": ia, "target": ib,
+                "type": "PREDICTED_TIE", "tier": "predicted",
+                "weight": 1, "value": pr["score"],
+                "label": f"predicted tie: statistical similarity {pr['score']:.2f}, unverified",
+            })
 
     # ---- Main scandal graph: cap to a readable size if needed.
     # Keep all FC firms if <= 3500, else top by fc_value + all revoked + all in JVs.
@@ -389,9 +450,6 @@ def main() -> None:
     # ---- Scandal core graph: deliberately small and legible (not the full
     # dense network). The firms at the centre of the scandal + the district
     # offices they SHARE, so the picture reads as concentration, not a hairball.
-    NAMED = {"34061", "31762", "38958", "39196", "40908", "45914", "49129",
-             "52351", "45002", "49128", "15906", "46535", "48517", "34105",
-             "33234", "22465"}  # the named scandal firms
     scandal_firm_keys = set(sorted(fc_firm_keys, key=lambda k: firm[k]["val_fc"], reverse=True)[:24])
     scandal_firm_keys |= {k for k in fc_firm_keys if firm[k]["revoked"]}
     scandal_firm_keys |= (NAMED & fc_firm_keys)
@@ -444,6 +502,14 @@ def main() -> None:
             "fc_contracts": v["n_fc"], "fc_value": round(v["val_fc"], 2),
             "hhi_fc": v.get("hhi_fc", 0.0), "concentrated": v.get("hhi_fc", 0.0) > HHI_HIGH,
             "n_fc_firms": v.get("n_fc_firms", 0),
+        })
+    # Curated persons join the search index too (source-linked in overlay.json).
+    for p in persons:
+        entities.append({
+            "id": p["id"], "key": p["id"], "label": p["name"], "type": "Person",
+            "role": p.get("role"), "status": p.get("status"),
+            "sources": p.get("sources", []), "firms": p.get("firms", []),
+            "n_contracts": 0, "value": 0, "fc_contracts": 0, "fc_value": 0,
         })
     entities.sort(key=lambda e: e["value"], reverse=True)
 

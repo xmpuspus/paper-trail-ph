@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Graph, Table, ArrowsOut, CircleNotch } from "@phosphor-icons/react";
 import type { GraphData, Entity, Overlay, InNews, Stats } from "@/lib/types";
@@ -42,6 +42,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
   const [full, setFull] = useState(false);
   const [loadingFull, setLoadingFull] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   // Load the searchable index once; used by search + the detail lookup.
   useEffect(() => {
@@ -56,14 +57,21 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
     return () => { live = false; };
   }, []);
 
-  // On small screens the WebGL graph degrades to the searchable table.
+  // Track small screens for touch-friendly behaviour. The graph renders on
+  // mobile too; the Table view stays one tap away.
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 820px)");
-    const apply = () => { setIsMobile(mq.matches); if (mq.matches) setView("table"); };
+    const apply = () => setIsMobile(mq.matches);
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
+
+  // On phones the detail panel sits below the graph, so a node tap scrolls it
+  // into view instead of leaving the update off-screen.
+  useEffect(() => {
+    if (isMobile && selectedKey) detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [selectedKey, isMobile]);
 
   const displayGraph = useMemo(() => {
     if (showEntities) return graph;
@@ -111,16 +119,14 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
 
       {/* Toolbar */}
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        {!isMobile && (
-          <div className="inline-flex rounded-lg border border-hairline p-0.5" role="group" aria-label="Graph or table view">
-            <button onClick={() => setView("graph")} aria-pressed={view === "graph"} className={`btn text-[13px] ${view === "graph" ? "btn-primary" : "btn-ghost border-0"}`}>
-              <Graph size={15} /> Graph
-            </button>
-            <button onClick={() => setView("table")} aria-pressed={view === "table"} className={`btn text-[13px] ${view === "table" ? "btn-primary" : "btn-ghost border-0"}`}>
-              <Table size={15} /> Table
-            </button>
-          </div>
-        )}
+        <div className="inline-flex rounded-lg border border-hairline p-0.5" role="group" aria-label="Graph or table view">
+          <button onClick={() => setView("graph")} aria-pressed={view === "graph"} className={`btn text-[13px] ${view === "graph" ? "btn-primary" : "btn-ghost border-0"}`}>
+            <Graph size={15} /> Graph
+          </button>
+          <button onClick={() => setView("table")} aria-pressed={view === "table"} className={`btn text-[13px] ${view === "table" ? "btn-primary" : "btn-ghost border-0"}`}>
+            <Table size={15} /> Table
+          </button>
+        </div>
         <button onClick={loadFull} className="btn btn-ghost text-[13px]" aria-pressed={full}>
           {loadingFull ? <CircleNotch size={15} className="animate-spin" /> : <ArrowsOut size={15} />}
           {full ? "Show the named firms" : `Show full flood-control network (${stats.graph_main_nodes.toLocaleString()} nodes)`}
@@ -133,7 +139,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
       <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
         {/* Graph / table */}
         <div className="relative h-[560px] min-w-0 overflow-hidden rounded-xl border border-hairline bg-page md:h-[640px]">
-          {view === "graph" && !isMobile ? (
+          {view === "graph" ? (
             <>
               <GraphView
                 data={displayGraph}
@@ -161,7 +167,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
         </div>
 
         {/* Right sidebar: detail or top firms */}
-        <div className="h-[560px] min-w-0 md:h-[640px]">
+        <div ref={detailRef} className="h-[560px] min-w-0 scroll-mt-4 md:h-[640px]">
           {selectedEntity ? (
             <EntityDetail
               entity={selectedEntity}

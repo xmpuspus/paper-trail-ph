@@ -73,7 +73,7 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
   const interactedRef = useRef(false); // any manual control disables auto-play
 
   // Only the recorded contract structure forms the replay.
-  const { nodes, edges, minYear, maxYear, statsByYear } = useMemo(() => {
+  const { nodes, edges, minYear, maxYear, statsByYear, spanX, spanY } = useMemo(() => {
     const keepNode = (t: string) => t === "Contractor" || t === "ProcuringEntity";
     const keepEdge = (t: string) => t === "AWARDED_TO" || t === "CO_AWARDED_WITH";
     const rnodes = data.nodes.filter((n) => keepNode(n.type));
@@ -84,9 +84,16 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
     const maxY = years.length ? Math.max(...years) : 2025;
 
     // Frozen layout: compute once with ForceAtlas2, then reveal by year.
+    // Seed on a circle (deterministic, symmetric) so the result is reproducible
+    // and converges to a rounded, cohesive shape rather than a random smear. Node
+    // sizes feed adjustSizes so big nodes don't overlap.
     const g = new Graph({ multi: false });
-    rnodes.forEach((n) => {
-      if (!g.hasNode(n.id)) g.addNode(n.id, { x: Math.random() * 100, y: Math.random() * 100 });
+    const N = rnodes.length || 1;
+    rnodes.forEach((n, i) => {
+      if (!g.hasNode(n.id)) {
+        const ang = (2 * Math.PI * i) / N;
+        g.addNode(n.id, { x: Math.cos(ang) * 100, y: Math.sin(ang) * 100, size: Math.max(2.5, nodeRadius(n)) });
+      }
     });
     redges.forEach((e) => {
       if (g.hasNode(e.source) && g.hasNode(e.target) && !g.hasEdge(e.source, e.target)) {
@@ -94,9 +101,19 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
       }
     });
     const big = g.order > 900;
+    // linLog + outbound attraction pulls firms toward the offices they win in,
+    // gravity keeps the whole thing cohesive, adjustSizes spaces the marks.
     forceAtlas2.assign(g, {
-      iterations: big ? 120 : 320,
-      settings: { gravity: 0.4, scalingRatio: 30, linLogMode: true, adjustSizes: true, slowDown: 5, barnesHutOptimize: true, outboundAttractionDistribution: true },
+      iterations: big ? 150 : 600,
+      settings: {
+        linLogMode: true,
+        outboundAttractionDistribution: true,
+        adjustSizes: true,
+        barnesHutOptimize: true,
+        gravity: 1.1,
+        scalingRatio: 9,
+        slowDown: 9,
+      },
     });
 
     // Node reveal = the first year an incident edge appears (no floating nodes).
@@ -115,15 +132,18 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
       minPy = Math.min(minPy, a.y); maxPy = Math.max(maxPy, a.y);
     });
     const spanX = maxX - minX || 1, spanY = maxPy - minPy || 1;
+    const midX = (minX + maxX) / 2, midY = (minPy + maxPy) / 2;
 
     // Label the largest few named firms once they appear.
     const labelled = new Set(
       [...rnodes].filter((n) => n.type === "Contractor").sort((a, b) => (b.fc_value ?? 0) - (a.fc_value ?? 0)).slice(0, 6).map((n) => n.id),
     );
 
+    // Centre the layout in its own units; the draw loop fits it with a single
+    // uniform scale so the true (roughly round) proportions are preserved.
     const posOf = (id: string) => {
       const a = g.getNodeAttributes(id);
-      return { x: (a.x - minX) / spanX, y: (a.y - minPy) / spanY };
+      return { x: a.x - midX, y: a.y - midY };
     };
 
     const lnodes: LNode[] = rnodes.map((n) => {
@@ -174,7 +194,7 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
 
     // Layout + status keys only; colours are theme-resolved in the draw loop, so
     // this does not depend on theme and never re-lays-out on a theme toggle.
-    return { nodes: lnodes, edges: ledges, minYear: minY, maxYear: maxY, statsByYear };
+    return { nodes: lnodes, edges: ledges, minYear: minY, maxYear: maxY, statsByYear, spanX, spanY };
   }, [data, overlay, inNews]);
 
   useEffect(() => {
@@ -211,12 +231,17 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
     let C = palette();
     let paletteTheme = document.documentElement.getAttribute("data-theme");
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    let W = 0, H = 0, PAD = 26;
+    let W = 0, H = 0, scale = 1;
+    const PAD = 34;
 
     const resize = () => {
       const cw = wrap.clientWidth;
-      const ch = Math.max(300, Math.min(480, Math.round(cw * 0.52)));
+      // Taller, less extreme aspect gives the round layout room to breathe.
+      const ch = Math.max(360, Math.min(600, Math.round(cw * 0.66)));
       W = cw; H = ch;
+      // One uniform scale for both axes: preserves the layout's true proportions
+      // (no horizontal stretch), fit to whichever dimension is tighter, centred.
+      scale = Math.min((W - 2 * PAD) / spanX, (H - 2 * PAD) / spanY);
       canvas.width = cw * dpr; canvas.height = ch * dpr;
       canvas.style.width = cw + "px"; canvas.style.height = ch + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -225,8 +250,8 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
-    const X = (nx: number) => PAD + nx * (W - 2 * PAD);
-    const Y = (ny: number) => PAD + ny * (H - 2 * PAD);
+    const X = (nx: number) => W / 2 + nx * scale;
+    const Y = (ny: number) => H / 2 + ny * scale;
 
     let raf = 0;
     let last = 0;
@@ -259,7 +284,7 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
       for (const e of edges) {
         if (e.reveal > curYear) continue;
         const frac = e.reveal === curYear ? clamp(t - e.reveal, 0, 1) : 1;
-        ctx.globalAlpha = (e.jv ? 0.75 : 0.42) * frac;
+        ctx.globalAlpha = (e.jv ? 0.7 : 0.3) * frac;
         ctx.strokeStyle = e.jv ? C.jv : C.edge;
         ctx.lineWidth = edgeWidth(e.w, e.jv);
         ctx.beginPath();
@@ -275,13 +300,18 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
         const r = n.r * (0.3 + 0.7 * pop);
         const px = X(n.x), py = Y(n.y);
         ctx.fillStyle = C.status[n.status] ?? C.status.normal;
-        ctx.globalAlpha = 0.35 + 0.65 * pop;
+        ctx.globalAlpha = 0.4 + 0.6 * pop;
+        // A thin surface-coloured ring separates overlapping marks.
+        ctx.strokeStyle = C.bg;
+        ctx.lineWidth = 1.2;
         if (n.square) {
           ctx.fillRect(px - r, py - r, r * 2, r * 2);
+          ctx.strokeRect(px - r, py - r, r * 2, r * 2);
         } else {
           ctx.beginPath();
           ctx.arc(px, py, r, 0, Math.PI * 2);
           ctx.fill();
+          ctx.stroke();
         }
       }
       // labels (named firms, once solidly in)
@@ -300,7 +330,7 @@ export default function GraphTimeline({ data, overlay, inNews }: Props) {
     };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); };
-  }, [nodes, edges, minYear, maxYear, reduced]);
+  }, [nodes, edges, minYear, maxYear, reduced, spanX, spanY]);
 
   // Auto-play once when scrolled into view (unless reduced motion).
   useEffect(() => {

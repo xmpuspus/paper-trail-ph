@@ -20,6 +20,7 @@ interface LoaderProps {
   data: GraphData;
   colorBy: ColorBy;
   showDerived: boolean;
+  showPredicted?: boolean;
   overlay: Overlay | null;
   inNews: InNews | null;
   selected: string | null;
@@ -34,6 +35,7 @@ function resolveColors(theme: string) {
       action: cssColor("--signal", "#e8a33d"),
       news: cssColor("--water", "#38b2c4"),
       entity: cssColor("--node-entity", "#4a90f0"),
+      person: cssColor("--node-person", "#9d7bc4"),
       normal: cssColor("--node-contractor", "#8aa0bb"),
     } as Record<string, string>,
     cat: Array.from({ length: 8 }, (_, i) => cssColor(`--cat-${i + 1}`, "#888")),
@@ -42,6 +44,7 @@ function resolveColors(theme: string) {
     // where a low alpha washes out against the pale surface.
     tierRecorded: cssColor("--tier-recorded", "#9db2cc") + (light ? "8c" : "4d"),
     tierDerived: cssColor("--tier-derived", "#38b2c4") + (light ? "99" : "66"),
+    tierPredicted: cssColor("--tier-predicted", "#9d7bc4") + (light ? "8c" : "59"),
     // The connected edges when a node is focused: strong enough to read.
     focusEdge: cssColor("--tier-recorded", "#9db2cc") + "e0",
     // Dimmed non-neighbour nodes: a visible grey in light mode; a faded alpha
@@ -51,7 +54,7 @@ function resolveColors(theme: string) {
   };
 }
 
-function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, onSelect }: LoaderProps) {
+function GraphLoader({ data, colorBy, showDerived, showPredicted = false, overlay, inNews, selected, onSelect }: LoaderProps) {
   const loadGraph = useLoadGraph();
   const registerEvents = useRegisterEvents();
   const sigma = useSigma();
@@ -93,6 +96,7 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
       if (!graph.hasNode(e.source) || !graph.hasNode(e.target)) return;
       if (graph.hasEdge(e.source, e.target)) return;
       const derived = e.tier === "derived";
+      const predicted = e.tier === "predicted";
       // A concise label, shown only when an endpoint is focused (see edgeReducer).
       // The full sentence lives in the entity detail; on-canvas it stays short.
       const elabel =
@@ -100,14 +104,18 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
           ? "joint venture"
           : e.type === "CO_LOCATED"
             ? `${e.weight} shared offices`
-            : `${e.weight} contract${e.weight === 1 ? "" : "s"}`;
+            : e.type === "PERSON_LINK"
+              ? "person on record"
+              : e.type === "PREDICTED_TIE"
+                ? "predicted (statistical)"
+                : `${e.weight} contract${e.weight === 1 ? "" : "s"}`;
       graph.addEdgeWithKey(e.id, e.source, e.target, {
-        size: derived ? 0.45 : Math.max(0.35, Math.min(1.5, Math.log10((e.weight || 1) + 1) * 0.9)),
-        color: derived ? C.tierDerived : C.tierRecorded,
-        type: derived ? "curved" : "straight",
+        size: predicted ? 0.4 : derived ? 0.45 : Math.max(0.35, Math.min(1.5, Math.log10((e.weight || 1) + 1) * 0.9)),
+        color: predicted ? C.tierPredicted : derived ? C.tierDerived : C.tierRecorded,
+        type: derived || predicted ? "curved" : "straight",
         tier: e.tier,
         elabel,
-        hidden: derived && !showDerived,
+        hidden: (derived && !showDerived) || (predicted && !showPredicted),
       });
     });
 
@@ -149,21 +157,25 @@ function GraphLoader({ data, colorBy, showDerived, overlay, inNews, selected, on
     });
     graph.forEachEdge((id) => {
       const tier = graph.getEdgeAttribute(id, "tier") as string;
-      graph.setEdgeAttribute(id, "color", tier === "derived" ? C.tierDerived : C.tierRecorded);
+      graph.setEdgeAttribute(
+        id,
+        "color",
+        tier === "predicted" ? C.tierPredicted : tier === "derived" ? C.tierDerived : C.tierRecorded,
+      );
     });
     sigma.refresh();
   }, [colorBy, theme, sigma]);
 
-  // Toggle inferred (derived) edges.
+  // Toggle inferred (derived) and predicted (statistical) edges.
   useEffect(() => {
     const graph = sigma.getGraph();
     graph.forEachEdge((id) => {
-      if ((graph.getEdgeAttribute(id, "tier") as string) === "derived") {
-        graph.setEdgeAttribute(id, "hidden", !showDerived);
-      }
+      const tier = graph.getEdgeAttribute(id, "tier") as string;
+      if (tier === "derived") graph.setEdgeAttribute(id, "hidden", !showDerived);
+      if (tier === "predicted") graph.setEdgeAttribute(id, "hidden", !showPredicted);
     });
     sigma.refresh();
-  }, [showDerived, sigma]);
+  }, [showDerived, showPredicted, sigma]);
 
   // Selection + hover highlight. Explorer tracks canonical keys; resolve to ids.
   useEffect(() => {
@@ -211,13 +223,14 @@ interface GraphViewProps {
   data: GraphData;
   colorBy: ColorBy;
   showDerived: boolean;
+  showPredicted?: boolean;
   overlay: Overlay | null;
   inNews: InNews | null;
   selected: string | null;
   onSelect: (key: string | null) => void;
 }
 
-export default function GraphView({ data, colorBy, showDerived, overlay, inNews, selected, onSelect }: GraphViewProps) {
+export default function GraphView({ data, colorBy, showDerived, showPredicted, overlay, inNews, selected, onSelect }: GraphViewProps) {
   const { theme } = useTheme();
   const bg = theme === "dark" ? "#0a1017" : "#eef2f7";
   const labelColor = theme === "dark" ? "#a2b4ca" : "#46586e";
@@ -260,6 +273,7 @@ export default function GraphView({ data, colorBy, showDerived, overlay, inNews,
         data={data}
         colorBy={colorBy}
         showDerived={showDerived}
+        showPredicted={showPredicted}
         overlay={overlay}
         inNews={inNews}
         selected={selected}

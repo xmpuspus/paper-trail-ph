@@ -54,9 +54,10 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
         <Card title="Confidence tiers">
           <p>An inferred link never looks like a recorded one.</p>
           <ul>
-            <li><strong>Recorded</strong> (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.</li>
+            <li><strong>Recorded</strong> (solid line): a contract award, joint venture, revoked license, blacklist, court filing, or a source-linked person, with a source.</li>
             <li><strong>Inferred from records</strong> (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.</li>
-            <li><strong>Possible namesake</strong> (faintest): a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.</li>
+            <li><strong>Predicted</strong> (faintest, off by default): a Node2Vec statistical similarity in bidding footprint between firms with no recorded joint venture. Not evidence of a relationship, and unverified against any registry.</li>
+            <li><strong>Possible namesake</strong>: a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.</li>
           </ul>
         </Card>
 
@@ -70,12 +71,26 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
           </p>
         </Card>
 
+        <Card title="Network analysis methods">
+          <p>
+            Computed offline with networkx and gensim, seeded for reproducibility, and baked as JSON.
+            <strong> Temporal:</strong> per-year value, the named firms&apos; share (contract value split equally among
+            joint awardees so shares sum to 100%), newcomer share, and the cumulative joint-venture network.
+            <strong> Patterns:</strong> descriptive indicators with stated thresholds, in the spirit of the OECD
+            guidelines for fighting bid rigging in public procurement; a zero result is reported as tested.
+            <strong> Predicted ties:</strong> Node2Vec embeddings (64 dims, seed 42) over the firm-office graph;
+            cosine similarity between firms with no recorded joint venture, corroborated by Adamic-Adar. Statistical
+            similarity only, never presented as a relationship.
+          </p>
+        </Card>
+
         <Card title="Verification and limits">
           <p>
-            Primary-source-or-omit: an official action enters the graph only if it traces to a primary or primary-citing
-            source. Firms without a confirmed action carry recorded facts only. Deferred to a later release, stated plainly:
-            link prediction (Node2Vec), temporal money-flow, SALN wealth and SOCE campaign-finance joins, and the
-            politician and dynasty layer. Oversight bodies:{" "}
+            Primary-source-or-omit: an official action or person enters the graph only if it traces to a primary or
+            primary-citing source. Firms without a confirmed action carry recorded facts only. The person layer is
+            curated and source-linked, not scraped. Not yet joined, stated plainly: bulk SALN wealth and SOCE
+            campaign-finance records (neither is available as machine-readable public data today; the one
+            campaign-finance link shown is individually sourced), and the PhilGEPS cross-check. Oversight bodies:{" "}
             {overlay.investigation.map((b, i) => (
               <span key={b.body}>{i > 0 ? ", " : ""}{b.body}</span>
             ))}.

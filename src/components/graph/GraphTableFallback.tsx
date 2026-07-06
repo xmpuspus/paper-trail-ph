@@ -61,7 +61,7 @@ export default function GraphTableFallback({ data, onSelect }: { data: GraphData
                     {n.revoked && <span className="ml-2 text-[11px] text-signal">revoked</span>}
                   </button>
                 </td>
-                <td className="py-1.5 pr-2 text-text-muted">{n.type === "Contractor" ? "Contractor" : "District office"}</td>
+                <td className="py-1.5 pr-2 text-text-muted">{n.type === "Contractor" ? "Contractor" : n.type === "Person" ? "Person" : "District office"}</td>
                 <td className="tabular py-1.5 pr-2 text-right text-text-secondary">{peso(n.fc_value)}</td>
                 <td className="tabular py-1.5 pr-2 text-right text-text-secondary">{num(n.fc_contracts)}</td>
                 <td className="tabular py-1.5 text-right text-text-muted">{n.community ?? "—"}</td>

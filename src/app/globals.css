@@ -34,9 +34,11 @@
     --graph-label: #4b5158;
     --node-contractor: #9aa2ab;
     --node-entity: #1a56db;
+    --node-person: #6d4ea3;
     --tier-recorded: #59616b;
     --tier-derived: #2a97a8;
     --tier-namesake: #aab2bb;
+    --tier-predicted: #9d7bc4;
 
     --scrollbar-thumb: rgba(28, 30, 33, 0.18);
     --scrollbar-thumb-hover: rgba(28, 30, 33, 0.30);
@@ -72,9 +74,11 @@
     --graph-label: #aab1ba;
     --node-contractor: #8b95a1;
     --node-entity: #6c9bff;
+    --node-person: #b79ae0;
     --tier-recorded: #9aa5b2;
     --tier-derived: #35b6c6;
     --tier-namesake: #5c6672;
+    --tier-predicted: #8f7bb0;
 
     --scrollbar-thumb: rgba(233, 235, 238, 0.14);
     --scrollbar-thumb-hover: rgba(233, 235, 238, 0.26);

@@ -29,9 +29,10 @@ Every figure below is computed from the source data and reconciled across the si
 
 An inferred link never looks like a recorded one.
 
-- **Recorded** (solid line): a contract award, joint venture, revoked license, blacklist, or court filing, with a source.
+- **Recorded** (solid line): a contract award, joint venture, revoked license, blacklist, court filing, or a source-linked person, with a source.
 - **Inferred from records** (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.
-- **Possible namesake** (faintest): a shared surname is not a relationship. Not shown in this release. Reserved for a future human-verified layer.
+- **Predicted** (faintest, off by default): a Node2Vec statistical similarity in bidding footprint between firms with no recorded joint venture. Not evidence of a relationship; unverified against any registry.
+- **Possible namesake**: a shared surname is not a relationship. Not shown in this release. Reserved for a future human-verified layer.
 
 The scandal overlay (owners, license revocations, charges) is primary-source-or-omit: an entry enters the graph only if it traces to a primary or primary-citing source (PCAB Board Resolution 075, Ombudsman and Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions). Firms without a confirmed action carry recorded facts only. Sources are in `public/data/overlay.json`.
 
@@ -54,7 +55,9 @@ DPWH parquet ──▶ scripts/build_graph.py ──▶ public/data/*.json ─�
 
 - **Entity resolution** keys each firm on its DPWH numeric id (or a normalized name when absent), parses joint ventures on the `/` separator into recorded co-award edges, and reads the `[REVOKED]` and `FORMERLY` markers.
 - **Graph metrics** (betweenness, PageRank, degree, Louvain communities, HHI per district office) are computed offline with networkx and baked into the graph. No Neo4j GDS.
-- **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `in_news.json` (news tags).
+- **Network analytics** (`scripts/build_analytics.py`): the year-by-year formation series (value, named-firm share with contract value split equally among joint awardees, newcomer share, cumulative JV network), structural pattern indicators with stated thresholds (near-identical footprints, JV rings, top-awardee alternation, sudden entrants), and Node2Vec link prediction (64 dims, seed 42; cosine similarity between firms with no recorded JV, corroborated by Adamic-Adar). All seeded and reproducible.
+- **Person layer:** the 8 people in the sourced overlay become graph nodes with recorded, source-linked edges to their firms. Curated, never scraped.
+- **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `in_news.json` (news tags), `temporal.json`, `signals.json`, `predicted-ties.json`.
 - **Frontend:** Next.js 14, Sigma.js v3 (WebGL). On mobile the graph degrades to a searchable table.
 
 ## Run locally
@@ -64,7 +67,8 @@ npm install
 npm run dev            # http://localhost:3000
 
 # Rebuild the baked data from the DPWH parquet (offline):
-python3 scripts/build_graph.py
+python3 scripts/build_analytics.py   # temporal + signals + Node2Vec prediction
+python3 scripts/build_graph.py       # graphs + search index (injects the above)
 ```
 
 The parquet is pulled by `scripts/collectors/dpwh.py`. Neo4j is optional and only used as an offline exploration step. It is not required to run or build the site.
@@ -82,6 +86,6 @@ The interactive graph joining DPWH contracts, officials, court outcomes, and liv
 
 ## What is deferred
 
-Not faked but stated plainly: link prediction (Node2Vec), temporal money-flow, SALN wealth and SOCE campaign-finance joins, and the politician and dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the v1 site.
+Not faked but stated plainly: bulk SALN wealth and SOCE campaign-finance joins (neither is available as machine-readable public data today; the one campaign-finance link shown is individually sourced), the PhilGEPS cross-check, and the dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the site yet.
 
 Not affiliated with any government agency.

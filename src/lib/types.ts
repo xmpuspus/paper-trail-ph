@@ -2,8 +2,8 @@
 // and the curated overlay/in_news files). Every field here is a recorded fact
 // from the DPWH dataset or a source-linked curated action.
 
-export type NodeType = "Contractor" | "ProcuringEntity";
-export type Tier = "recorded" | "derived" | "namesake";
+export type NodeType = "Contractor" | "ProcuringEntity" | "Person";
+export type Tier = "recorded" | "derived" | "namesake" | "predicted";
 
 export interface TopDeo {
   deo: string;
@@ -37,6 +37,11 @@ export interface GraphNode {
   hhi_fc?: number;
   concentrated?: boolean;
   n_fc_firms?: number;
+  // person (curated, source-linked in overlay.json)
+  role?: string;
+  status?: string;
+  sources?: string[];
+  firms?: string[];
 }
 
 export interface GraphEdge {
@@ -75,6 +80,68 @@ export interface Entity {
   n_fc_firms?: number;
   top_deos?: TopDeo[];
   coawardees?: { key: string; name: string; shared: number; fc_shared: number }[];
+  // person entries in the index (curated, source-linked)
+  role?: string;
+  status?: string;
+  sources?: string[];
+  firms?: string[];
+}
+
+// ---- Offline network analytics (scripts/build_analytics.py) ----
+
+export interface TemporalYear {
+  year: number;
+  fc_contracts: number;
+  fc_value: number;
+  named_share_pct: number;
+  entrant_share_pct: number;
+  cr10_pct: number;
+  concentrated_deos: number;
+  active_deos: number;
+  jv_firms_cum: number;
+  jv_pairs_cum: number;
+  jv_giant_component: number;
+}
+
+export interface TemporalData {
+  _meta: { method: string; disclaimer: string };
+  years: TemporalYear[];
+}
+
+export interface SignalSection<T> {
+  definition: string;
+  count: number;
+  items: T[];
+}
+
+export interface SignalsData {
+  _meta: { framing: string; disclaimer: string };
+  footprint_pairs: SignalSection<{
+    firms: string[]; keys: string[]; shared_offices: number; jaccard: number; combined_fc_value: number;
+  }>;
+  jv_groups: SignalSection<{
+    firms: string[]; keys: string[]; size: number; internal_jv_pairs: number; density: number; combined_fc_value: number;
+  }>;
+  alternation: SignalSection<{
+    office: string; hhi: number; years: number[]; top_by_year: string[]; firms: string[]; keys: string[]; switches: number;
+  }>;
+  entrants: SignalSection<{
+    firm: string; key: string; first_year: number; value_first_two_years: number; contracts: number;
+  }>;
+}
+
+export interface PredictedPair {
+  firms: string[];
+  keys: string[];
+  score: number;
+  adamic_adar: number;
+  shared_offices: number;
+}
+
+export interface PredictedTies {
+  _meta: { method: string; caveat: string; disclaimer: string };
+  count: number;
+  pairs: PredictedPair[];
 }
 
 export interface Stats {

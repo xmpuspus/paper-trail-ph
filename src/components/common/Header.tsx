@@ -7,6 +7,7 @@ import LogoMark from "@/components/common/LogoMark";
 const NAV = [
   { href: "#story", label: "The record" },
   { href: "#explore", label: "Explore" },
+  { href: "#analysis", label: "Analysis" },
   { href: "#methodology", label: "Methodology" },
 ];
 
@@ -22,9 +23,9 @@ export default function Header() {
           <span className="font-display text-[17px] font-bold tracking-tight text-text-primary">Paper Trail PH</span>
           <span className="hidden text-xs text-text-muted sm:inline">· DPWH flood-control records</span>
         </a>
-        <nav className="ml-auto flex items-center gap-1 text-sm" aria-label="Primary">
+        <nav className="ml-auto flex flex-wrap items-center justify-end gap-1 text-sm" aria-label="Primary">
           {NAV.map((n) => (
-            <a key={n.href} href={n.href} className="rounded-md px-2.5 py-1.5 text-text-secondary hover:bg-surface-2 hover:text-text-primary">
+            <a key={n.href} href={n.href} className="rounded-md px-1.5 py-1.5 text-[13px] text-text-secondary hover:bg-surface-2 hover:text-text-primary sm:px-2.5 sm:text-sm">
               {n.label}
             </a>
           ))}

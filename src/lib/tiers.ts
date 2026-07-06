@@ -4,7 +4,7 @@
 import type { GraphNode, Overlay, InNews } from "./types";
 
 export interface TierStyle {
-  key: "recorded" | "derived" | "namesake";
+  key: "recorded" | "derived" | "namesake" | "predicted";
   label: string;
   desc: string;
   cssVar: string;
@@ -37,11 +37,19 @@ export const TIERS: Record<string, TierStyle> = {
     curved: true,
     opacity: 0.3,
   },
+  predicted: {
+    key: "predicted",
+    label: "Predicted (statistical, unverified)",
+    desc: "Not a recorded or inferred relationship, but a Node2Vec similarity in bidding footprint between firms with no recorded joint venture. Not evidence of a relationship. Off by default.",
+    cssVar: "--tier-predicted",
+    curved: true,
+    opacity: 0.35,
+  },
 };
 
 // Node status, most sensitive first. A colour never carries meaning alone: every
 // status ships with a legend label and, on the node card, a source link.
-export type StatusKey = "alleged" | "action" | "news" | "entity" | "normal";
+export type StatusKey = "alleged" | "action" | "news" | "entity" | "person" | "normal";
 
 export interface StatusStyle {
   key: StatusKey;
@@ -54,6 +62,7 @@ export const STATUS: Record<StatusKey, StatusStyle> = {
   action: { key: "action", label: "Recorded official action (license revoked / blacklisted)", cssVar: "--signal" },
   news: { key: "news", label: "Named in recent news coverage", cssVar: "--water" },
   entity: { key: "entity", label: "Procuring entity (DPWH district office)", cssVar: "--node-entity" },
+  person: { key: "person", label: "Person on the record (source-linked)", cssVar: "--node-person" },
   normal: { key: "normal", label: "Contractor (no flag on record)", cssVar: "--node-contractor" },
 };
 
@@ -69,6 +78,7 @@ export function nodeStatus(
   inNews?: InNews | null,
 ): StatusKey {
   if (node.type === "ProcuringEntity") return "entity";
+  if (node.type === "Person") return "person";
   const o = overlay?.firms?.[node.key];
   if (o) {
     const types = o.actions.map((a) => a.type);
@@ -98,7 +108,9 @@ export const ACTION_META: Record<string, { label: string; tone: ActionTone }> = 
 };
 
 // Honest size: node radius scales with recorded flood-control contract value.
+// Persons carry no contract value; they render small and constant.
 export function nodeRadius(node: GraphNode): number {
+  if (node.type === "Person") return 4;
   const v = node.type === "Contractor" ? node.fc_value ?? 0 : node.fc_value ?? 0;
   const min = 2.5;
   const max = node.type === "ProcuringEntity" ? 11 : 16;

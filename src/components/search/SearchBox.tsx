@@ -109,13 +109,15 @@ export default function SearchBox({ onSelect, entities: provided, overlay, autoF
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm text-text-primary">{r.entity.label}</span>
                     <span className="block truncate text-[11px] text-text-muted">
-                      {r.entity.type === "Contractor" ? "Contractor" : "District office"}
+                      {r.entity.type === "Contractor" ? "Contractor" : r.entity.type === "Person" ? "Person on the record" : "District office"}
                       {r.reason?.kind === "name" && <span className="ml-1.5">· matches {r.reason.text}</span>}
                       {r.reason?.kind === "former" && <span className="ml-1.5">· formerly {r.reason.text}</span>}
                       {r.entity.revoked && <span className="ml-1.5 text-signal">· license revoked on record</span>}
                     </span>
                   </span>
-                  <span className="tabular shrink-0 text-sm text-text-secondary">{peso(r.entity.fc_value)}</span>
+                  {r.entity.type !== "Person" && (
+                    <span className="tabular shrink-0 text-sm text-text-secondary">{peso(r.entity.fc_value)}</span>
+                  )}
                 </li>
               </Fragment>
             ))

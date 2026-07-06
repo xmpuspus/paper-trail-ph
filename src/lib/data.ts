@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { Stats, GraphData, Overlay, InNews } from "./types";
+import type { Stats, GraphData, Overlay, InNews, TemporalData, SignalsData, PredictedTies } from "./types";
 
 // Build-time readers: the page is a server component, so these bake the small
 // JSON straight into the static HTML (instant first paint, no fetch, no CLS).
@@ -25,4 +25,13 @@ export function getOverlay(): Overlay {
 }
 export function getInNews(): InNews {
   return readJson<InNews>("in_news.json");
+}
+export function getTemporal(): TemporalData {
+  return readJson<TemporalData>("temporal.json");
+}
+export function getSignals(): SignalsData {
+  return readJson<SignalsData>("signals.json");
+}
+export function getPredicted(): PredictedTies {
+  return readJson<PredictedTies>("predicted-ties.json");
 }

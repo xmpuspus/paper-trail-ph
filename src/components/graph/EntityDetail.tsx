@@ -1,7 +1,7 @@
 "use client";
 
 import { X, ArrowSquareOut, Info } from "@phosphor-icons/react";
-import type { Entity, Overlay, InNews, OverlayPerson } from "@/lib/types";
+import type { Entity, Overlay, InNews, OverlayPerson, PredictedTies } from "@/lib/types";
 import { ACTION_META } from "@/lib/tiers";
 import { peso, pesoFull, num, shortDate } from "@/lib/format";
 
@@ -16,18 +16,24 @@ interface Props {
   entity: Entity | null;
   overlay: Overlay | null;
   inNews: InNews | null;
+  predicted?: PredictedTies | null;
+  resolveName?: (key: string) => string | undefined;
   onClose: () => void;
   onSelectRelated: (key: string) => void;
 }
 
-export default function EntityDetail({ entity, overlay, inNews, onClose, onSelectRelated }: Props) {
+export default function EntityDetail({ entity, overlay, inNews, predicted, resolveName, onClose, onSelectRelated }: Props) {
   if (!entity) return null;
   const isFirm = entity.type === "Contractor";
+  const isPerson = entity.type === "Person";
   const ov = isFirm ? overlay?.firms?.[entity.key] : undefined;
   const news = isFirm ? inNews?.firms?.[entity.key] : undefined;
   const persons: OverlayPerson[] =
     isFirm && overlay ? overlay.persons.filter((p) => p.firms.includes(entity.key)) : [];
   const source = (k: string) => overlay?.sources?.[k];
+  const predictedForFirm = isFirm
+    ? (predicted?.pairs ?? []).filter((p) => p.keys.includes(entity.key))
+    : [];
 
   return (
     <aside
@@ -36,7 +42,7 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
     >
       <header className="flex items-start justify-between gap-3 border-b border-hairline p-4">
         <div className="min-w-0">
-          <p className="eyebrow mb-1">{isFirm ? "Contractor" : "Procuring entity · DPWH district office"}</p>
+          <p className="eyebrow mb-1">{isPerson ? "Person on the record" : isFirm ? "Contractor" : "Procuring entity · DPWH district office"}</p>
           <h2 className="font-display text-[19px] font-bold leading-tight text-text-primary">{entity.label}</h2>
           {entity.former && (
             <p className="mt-1 text-xs text-text-muted">Formerly: {entity.former}</p>
@@ -53,7 +59,45 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
       </header>
 
       <div className="custom-scrollbar flex-1 overflow-y-auto p-4">
+        {/* Person: curated, source-linked role and status; no contract records */}
+        {isPerson && (
+          <>
+            <Section title="On the record">
+              {entity.role && <p className="text-sm leading-relaxed text-text-secondary">{entity.role}</p>}
+              {entity.status && <p className="mt-2 text-sm leading-relaxed text-text-secondary">{entity.status}</p>}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(entity.sources ?? []).map((sk) => {
+                  const s = source(sk);
+                  return s ? (
+                    <a key={sk} href={s.url} target="_blank" rel="noopener noreferrer" className="link-source inline-flex items-center gap-1 text-xs">
+                      {s.label} <ArrowSquareOut size={11} />
+                    </a>
+                  ) : null;
+                })}
+              </div>
+              <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-relaxed text-text-muted">
+                <Info size={13} className="mt-0.5 shrink-0" />
+                Charges and flags are allegations under the presumption of innocence. Every item above links to its source.
+              </p>
+            </Section>
+            {(entity.firms ?? []).length > 0 && (
+              <Section title="Linked firms (on the record)">
+                <ul className="flex flex-wrap gap-1.5">
+                  {(entity.firms ?? []).map((fk) => (
+                    <li key={fk}>
+                      <button onClick={() => onSelectRelated(fk)} className="chip hover:border-accent">
+                        {resolveName?.(fk) ?? fk}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            )}
+          </>
+        )}
+
         {/* Recorded facts from the DPWH dataset */}
+        {!isPerson && (
         <Section title="What the records show">
           <dl className="grid grid-cols-2 gap-3">
             <Metric label="DPWH contracts" value={num(entity.n_contracts)} />
@@ -79,6 +123,7 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
             Descriptive statistics from public records. Patterns may have legitimate explanations.
           </p>
         </Section>
+        )}
 
         {/* Recorded footprint: where the money went */}
         {isFirm && entity.top_deos && entity.top_deos.length > 0 && (
@@ -112,6 +157,33 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
                 </li>
               ))}
             </ul>
+          </Section>
+        )}
+
+        {/* Node2Vec predicted ties: the faintest tier, statistical only */}
+        {predictedForFirm.length > 0 && (
+          <Section
+            title="Predicted ties (statistical, unverified)"
+            hint="Node2Vec similarity in bidding footprint with firms that share no recorded joint venture with this one. Not a recorded relationship."
+          >
+            <ul className="flex flex-wrap gap-1.5">
+              {predictedForFirm.slice(0, 6).map((p) => {
+                const otherKey = p.keys[0] === entity.key ? p.keys[1] : p.keys[0];
+                const otherName = p.keys[0] === entity.key ? p.firms[1] : p.firms[0];
+                return (
+                  <li key={otherKey}>
+                    <button onClick={() => onSelectRelated(otherKey)} className="chip hover:border-accent" title={`similarity ${p.score}`}>
+                      {otherName} <span className="tabular text-text-muted">· {p.score.toFixed(2)}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-relaxed text-text-muted">
+              <Info size={13} className="mt-0.5 shrink-0" />
+              A predicted tie is a statistical similarity only. It is not evidence of a relationship,
+              coordination, or wrongdoing, and it has not been verified against any registry or filing.
+            </p>
           </Section>
         )}
 

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Graph, Table, ArrowsOut, CircleNotch } from "@phosphor-icons/react";
-import type { GraphData, Entity, Overlay, InNews, Stats } from "@/lib/types";
+import type { GraphData, Entity, Overlay, InNews, Stats, PredictedTies } from "@/lib/types";
 import { fetchEntities, fetchMainGraph } from "@/lib/client-data";
 import { peso } from "@/lib/format";
 import type { ColorBy } from "@/components/graph/GraphView";
@@ -26,16 +26,18 @@ interface Props {
   overlay: Overlay;
   inNews: InNews;
   stats: Stats;
+  predicted?: PredictedTies | null;
 }
 
 const QUICK = ["Topnotch", "Sunwest", "Legacy", "St. Gerrard", "MG Samidan", "Wawao"];
 
-export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props) {
+export default function Explorer({ scandalGraph, overlay, inNews, stats, predicted }: Props) {
   const [entities, setEntities] = useState<Entity[] | null>(null);
   const [entityMap, setEntityMap] = useState<Map<string, Entity>>(new Map());
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [colorBy, setColorBy] = useState<ColorBy>("status");
   const [showDerived, setShowDerived] = useState(false);
+  const [showPredicted, setShowPredicted] = useState(false); // statistical tier, off by default
   const [showEntities, setShowEntities] = useState(true);
   const [view, setView] = useState<"graph" | "table">("graph");
   const [graph, setGraph] = useState<GraphData>(scandalGraph);
@@ -145,6 +147,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
                 data={displayGraph}
                 colorBy={colorBy}
                 showDerived={showDerived}
+                showPredicted={showPredicted}
                 overlay={overlay}
                 inNews={inNews}
                 selected={selectedKey}
@@ -156,6 +159,8 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
                   setColorBy={setColorBy}
                   showDerived={showDerived}
                   setShowDerived={setShowDerived}
+                  showPredicted={showPredicted}
+                  setShowPredicted={setShowPredicted}
                   showEntities={showEntities}
                   setShowEntities={setShowEntities}
                 />
@@ -173,6 +178,8 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
               entity={selectedEntity}
               overlay={overlay}
               inNews={inNews}
+              predicted={predicted ?? null}
+              resolveName={(k) => entityMap.get(k)?.label}
               onClose={() => setSelectedKey(null)}
               onSelectRelated={(k) => setSelectedKey(k)}
             />

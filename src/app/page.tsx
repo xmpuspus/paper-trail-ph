@@ -3,14 +3,18 @@ import Footer from "@/components/common/Footer";
 import Hero from "@/components/Hero";
 import StoryRail from "@/components/StoryRail";
 import Explorer from "@/components/Explorer";
+import Analysis from "@/components/Analysis";
 import Methodology from "@/components/Methodology";
-import { getStats, getScandalGraph, getOverlay, getInNews } from "@/lib/data";
+import { getStats, getScandalGraph, getOverlay, getInNews, getTemporal, getSignals, getPredicted } from "@/lib/data";
 
 export default function Home() {
   const stats = getStats();
   const scandalGraph = getScandalGraph();
   const overlay = getOverlay();
   const inNews = getInNews();
+  const temporal = getTemporal();
+  const signals = getSignals();
+  const predicted = getPredicted();
 
   return (
     <>
@@ -33,7 +37,11 @@ export default function Home() {
                 recorded joint ventures, the official actions on file, and the sources.
               </p>
             </div>
-            <Explorer scandalGraph={scandalGraph} overlay={overlay} inNews={inNews} stats={stats} />
+            <Explorer scandalGraph={scandalGraph} overlay={overlay} inNews={inNews} stats={stats} predicted={predicted} />
+          </div>
+
+          <div className="mt-16 md:mt-24">
+            <Analysis temporal={temporal} signals={signals} predicted={predicted} />
           </div>
 
           <div className="mt-16 md:mt-24">

@@ -132,7 +132,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
 
       <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
         {/* Graph / table */}
-        <div className="relative h-[560px] overflow-hidden rounded-xl border border-hairline bg-page md:h-[640px]">
+        <div className="relative h-[560px] min-w-0 overflow-hidden rounded-xl border border-hairline bg-page md:h-[640px]">
           {view === "graph" && !isMobile ? (
             <>
               <GraphView
@@ -161,7 +161,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats }: Props
         </div>
 
         {/* Right sidebar: detail or top firms */}
-        <div className="h-[560px] md:h-[640px]">
+        <div className="h-[560px] min-w-0 md:h-[640px]">
           {selectedEntity ? (
             <EntityDetail
               entity={selectedEntity}

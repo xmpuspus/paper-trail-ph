@@ -47,7 +47,7 @@ export default function EntityDetail({ entity, overlay, inNews, onClose, onSelec
             {entity.concentrated && <span className="chip chip-signal">Concentrated market (HHI &gt; 2500)</span>}
           </div>
         </div>
-        <button onClick={onClose} className="btn-ghost shrink-0" aria-label="Close details">
+        <button onClick={onClose} className="btn-ghost grid h-10 w-10 shrink-0 place-items-center" aria-label="Close details">
           <X size={18} />
         </button>
       </header>

@@ -5,7 +5,7 @@ import StoryRail from "@/components/StoryRail";
 import Explorer from "@/components/Explorer";
 import Analysis from "@/components/Analysis";
 import Methodology from "@/components/Methodology";
-import { getStats, getScandalGraph, getOverlay, getInNews, getTemporal, getSignals, getPredicted } from "@/lib/data";
+import { getStats, getScandalGraph, getOverlay, getInNews, getTemporal, getSignals, getPredicted, getTemporalAnalysis } from "@/lib/data";
 
 export default function Home() {
   const stats = getStats();
@@ -15,6 +15,7 @@ export default function Home() {
   const temporal = getTemporal();
   const signals = getSignals();
   const predicted = getPredicted();
+  const temporalAnalysis = getTemporalAnalysis();
 
   return (
     <>
@@ -41,7 +42,7 @@ export default function Home() {
           </div>
 
           <div className="mt-16 md:mt-24">
-            <Analysis temporal={temporal} signals={signals} predicted={predicted} graph={scandalGraph} overlay={overlay} inNews={inNews} />
+            <Analysis temporal={temporal} signals={signals} predicted={predicted} graph={scandalGraph} overlay={overlay} inNews={inNews} temporalAnalysis={temporalAnalysis} />
           </div>
 
           <div className="mt-16 md:mt-24">

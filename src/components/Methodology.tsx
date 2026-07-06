@@ -84,6 +84,19 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
           </p>
         </Card>
 
+        <Card title="Temporal knowledge graph">
+          <p>
+            The graph is also read as a time series of facts. <strong>Temporal link prediction</strong> trains on the
+            awards up to each year and predicts next year&apos;s new joint ventures from prior shared-office structure
+            (time-decayed Adamic-Adar), on a strict chronological split, validated against both a label-permutation test
+            and a degree-preserving configuration-model null. <strong>Dynamic community detection</strong> runs Louvain
+            per year with adjusted-Rand stability across years. <strong>Change-points</strong> use Pettitt&apos;s
+            non-parametric test on each structural series. <strong>Temporal motifs</strong> compare a joint venture&apos;s
+            year to the median year of the pair&apos;s shared awards. A heterogeneous schema (person, firm, office,
+            institution nodes; typed dated edges) holds the money-and-power layer, populated only from sourced records.
+          </p>
+        </Card>
+
         <Card title="Verification and limits">
           <p>
             Primary-source-or-omit: an official action or person enters the graph only if it traces to a primary or

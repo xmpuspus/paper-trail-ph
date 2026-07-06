@@ -58,6 +58,7 @@ DPWH parquet ──▶ scripts/build_graph.py ──▶ public/data/*.json ─�
 - **Entity resolution** keys each firm on its DPWH numeric id (or a normalized name when absent), parses joint ventures on the `/` separator into recorded co-award edges, and reads the `[REVOKED]` and `FORMERLY` markers.
 - **Graph metrics** (betweenness, PageRank, degree, Louvain communities, HHI per district office) are computed offline with networkx and baked into the graph. No Neo4j GDS.
 - **Network analytics** (`scripts/build_analytics.py`): the year-by-year formation series (value, named-firm share with contract value split equally among joint awardees, newcomer share, cumulative JV network), structural pattern indicators with stated thresholds (near-identical footprints, JV rings, top-awardee alternation, sudden entrants), and Node2Vec link prediction (64 dims, seed 42; cosine similarity between firms with no recorded JV, corroborated by Adamic-Adar). All seeded and reproducible.
+- **Temporal knowledge-graph analytics** (`scripts/build_temporal.py`): the graph read as timestamped quads. Temporal link prediction on a rolling chronological split (predict next year's new joint ventures from prior shared-office structure; macro ROC-AUC ~0.70, beats a degree-preserving null every year at p < 0.01). Dynamic community detection (Louvain per year with adjusted-Rand stability). Pettitt change-point tests on each structural series. Temporal motifs (does a joint venture predate the pair's shared awards?). Plus a heterogeneous temporal schema (person/firm/office/institution nodes, typed dated edges) populated only from sourced records.
 - **Person layer:** the 8 people in the sourced overlay become graph nodes with recorded, source-linked edges to their firms. Curated, never scraped.
 - **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `in_news.json` (news tags), `temporal.json`, `signals.json`, `predicted-ties.json`.
 - **Frontend:** Next.js 14, Sigma.js v3 (WebGL). On mobile the graph degrades to a searchable table.
@@ -70,6 +71,7 @@ npm run dev            # http://localhost:3000
 
 # Rebuild the baked data from the DPWH parquet (offline):
 python3 scripts/build_analytics.py   # temporal + signals + Node2Vec prediction
+python3 scripts/build_temporal.py    # temporal KG: link prediction, communities, change-points, motifs
 python3 scripts/build_graph.py       # graphs + search index (injects the above)
 ```
 

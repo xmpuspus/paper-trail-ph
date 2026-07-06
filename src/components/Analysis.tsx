@@ -1,6 +1,7 @@
-import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews } from "@/lib/types";
+import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews, TemporalAnalysis as TAData } from "@/lib/types";
 import { peso } from "@/lib/format";
 import GraphTimeline from "@/components/graph/GraphTimeline";
+import TemporalAnalysis from "@/components/TemporalAnalysis";
 
 // Server-rendered network-analysis section: how the flood-control network
 // formed year by year, the structural patterns in the record, and the
@@ -14,6 +15,7 @@ interface Props {
   graph: GraphData;
   overlay: Overlay;
   inNews: InNews;
+  temporalAnalysis: TAData;
 }
 
 const W = 260;
@@ -88,7 +90,7 @@ function BarChart({
   );
 }
 
-export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews }: Props) {
+export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews, temporalAnalysis }: Props) {
   const ys = temporal.years;
   const years = ys.map((y) => y.year);
   const first = ys[0];
@@ -255,6 +257,8 @@ export default function Analysis({ temporal, signals, predicted, graph, overlay,
           switched on in the legend.
         </p>
       </div>
+
+      <TemporalAnalysis data={temporalAnalysis} />
     </section>
   );
 }

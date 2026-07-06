@@ -146,6 +146,40 @@ export interface PredictedTies {
   pairs: PredictedPair[];
 }
 
+// ---- Temporal knowledge-graph analytics (scripts/build_temporal.py) ----
+
+export interface TemporalAnalysis {
+  _meta: { disclaimer: string; generated_note: string };
+  link_prediction: {
+    _meta: { method: string; disclaimer: string };
+    macro_auc: number | null;
+    by_year: {
+      train_upto: number; predict: number; candidates: number; new_jv: number;
+      auc: number | null; auc_null_mean?: number; p_label_perm?: number; p_degree_null?: number;
+      top_hits?: { firms: string[]; score: number }[]; note?: string;
+    }[];
+  };
+  dynamic_communities: {
+    _meta: { method: string; disclaimer: string };
+    by_year: { year: number; firms_linked: number; communities: number; largest: number; top_sizes: number[]; stability_vs_prev: number | null }[];
+  };
+  change_points: {
+    _meta: { method: string; disclaimer: string };
+    metrics: Record<string, { change_year: number; p_value: number; before_mean: number; after_mean: number | null }>;
+  };
+  motifs: {
+    _meta: { method: string; disclaimer: string };
+    counts: { jv_before_awards: number; awards_before_jv: number; concurrent: number };
+    examples: { firms: string[]; jv_year: number; awards_median_year: number; relation: string; shared_awards: number }[];
+  };
+  hetero: {
+    _meta: { purpose: string; node_types: string[]; edge_types: string[]; disclaimer: string };
+    node_counts: Record<string, number>;
+    edge_count: number;
+    edges: { head: string; head_type: string; relation: string; tail: string; tail_type: string; date: string | null; sources: string[] }[];
+  };
+}
+
 export interface Stats {
   generated_note: string;
   source: { name: string; license: string; url: string };

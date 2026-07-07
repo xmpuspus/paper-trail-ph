@@ -99,7 +99,7 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
       body: (
         <>A handful of contractors do not just win in one place. St. Gerrard Construction appears as a flood-control
         awardee across 96 district offices; St. Timothy across 82; Legacy across 87. In the graph they sit between
-        clusters, the brokers with the widest reach.</>
+        clusters, with the widest reach across offices.</>
       ),
       figure: { value: "96", label: "district offices touched by one firm" },
       focus: "31762",
@@ -133,10 +133,10 @@ export default function StoryRail({ scandalGraph, overlay, inNews, stats }: Prop
       eyebrow: "Flags and freezes",
       title: "Audits, blacklists, frozen assets",
       body: (
-        <>The Commission on Audit flagged a Topnotch riverbank project in Bulacan, and the anti-money-laundering
-        council moved to freeze assets tied to its owners. DPWH ordered the perpetual disqualification of Wawao
-        Builders and SYMS. Even so, the eight firms carrying a revoked-license tag in the data won about ₱74.5 billion
-        in flood control alone.</>
+        <>The Commission on Audit flagged a Topnotch riverbank project in Bulacan. Separately, the anti-money-laundering
+        council secured court orders freezing assets tied to the Discaya family. DPWH ordered the perpetual
+        disqualification of Wawao Builders and SYMS. Even so, the eight firms carrying a revoked-license tag in the data
+        won about ₱74.5 billion in flood control alone.</>
       ),
       figure: { value: "₱74.5B", label: "flood-control won by revoked-license firms" },
       source: { label: "DPWH bans Wawao, SYMS (Manila Times)", url: "https://www.manilatimes.net/2025/09/05/news/national/dpwh-secretary-dizon-orders-perpetual-ban-of-wawao-builders-syms-construction-for-ghost-projects/2179262" },

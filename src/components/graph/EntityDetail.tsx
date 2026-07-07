@@ -167,7 +167,7 @@ export default function EntityDetail({ entity, overlay, inNews, predicted, sec, 
             hint="From the firm's own General Information Sheet, published by PCIJ. A recorded fact, not a scrape."
           >
             <dl className="grid grid-cols-2 gap-3">
-              <Metric label="SEC registration" value={secFirm.sec_reg_no} sub={`registered ${secFirm.reg_year}`} />
+              <Metric label="SEC registration" value={secFirm.sec_reg_no} sub={secFirm.reg_year ? `registered ${secFirm.reg_year}` : undefined} />
               <Metric
                 label="Paid-up capital"
                 value={secFirm.paid_up_capital != null ? pesoFull(secFirm.paid_up_capital) : "—"}

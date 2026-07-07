@@ -153,7 +153,7 @@ export interface SecFirm {
   name: string;
   graph_label?: string;
   sec_reg_no: string;
-  reg_year: number;
+  reg_year: number | null;
   company_type: string;
   paid_up_capital: number | null;
   capital_note?: string;

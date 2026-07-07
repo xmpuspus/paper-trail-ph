@@ -122,10 +122,10 @@
       "name": "Wawao Builders Corporation",
       "graph_label": "WAWAO BUILDERS",
       "sec_reg_no": "2025040198133-04",
-      "reg_year": 2025,
+      "reg_year": null,
       "company_type": "Stock corporation",
       "paid_up_capital": 50000000,
-      "capital_note": "Paid-up capital of the corporation registered with the SEC in 2025. The DPWH flood-control contracts were awarded to the earlier Wawao Builders, so this capital is not compared to those contracts.",
+      "capital_note": "Total paid-up capital per the firm's SEC GIS. The firm has held DPWH contracts since 2019; its 2025 SEC filing is an amendment of the articles of incorporation (an office move to Occidental Mindoro), not a new company.",
       "registered_office": "Rizal St, Brgy. Poblacion I, San Jose, Occidental Mindoro",
       "region": "MIMAROPA (Region IV-B)",
       "fc_value": 8402927494.73,
@@ -136,10 +136,7 @@
       "gis_url": "https://drive.google.com/file/d/1okskHvdqbgrsYhMHdNwE699a_rCO8cn5/view",
       "aoi_url": null,
       "tier": "recorded_sec",
-      "re_registration": {
-        "label": "A corporation named Wawao Builders Corporation was registered with the SEC in 2025 (registration number encodes 2025), after the DPWH ordered the perpetual disqualification of Wawao Builders for ghost flood-control projects in September 2025. The registration date is from the firm's own GIS; the disqualification is on the DPWH order.",
-        "source": "wawao_mt"
-      }
+      "contract_to_capital": 168.1
     }
   },
   "findings": {
@@ -161,6 +158,14 @@
           "paid_up_capital": 45000000,
           "ratio": 266.0,
           "note": "Total paid-up capital per the 2025 SEC GIS. Reported at about ₱1.25M at incorporation and later increased (Daily Tribune, Rappler)."
+        },
+        {
+          "key": "46535",
+          "name": "Wawao Builders Corporation",
+          "fc_value": 8402927494.73,
+          "paid_up_capital": 50000000,
+          "ratio": 168.1,
+          "note": "Total paid-up capital per the firm's SEC GIS. The firm has held DPWH contracts since 2019; its 2025 SEC filing is an amendment of the articles of incorporation (an office move to Occidental Mindoro), not a new company."
         },
         {
           "key": "22465",
@@ -199,14 +204,7 @@
     },
     "re_registration": {
       "definition": "A firm registered with the SEC after a recorded blacklist or revocation, per the registration date on its own GIS.",
-      "items": [
-        {
-          "key": "46535",
-          "name": "Wawao Builders Corporation",
-          "label": "A corporation named Wawao Builders Corporation was registered with the SEC in 2025 (registration number encodes 2025), after the DPWH ordered the perpetual disqualification of Wawao Builders for ghost flood-control projects in September 2025. The registration date is from the firm's own GIS; the disqualification is on the DPWH order.",
-          "source": "wawao_mt"
-        }
-      ]
+      "items": []
     }
   }
 }

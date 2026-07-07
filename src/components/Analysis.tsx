@@ -156,6 +156,9 @@ export default function Analysis({ temporal, signals, predicted, graph, overlay,
         />
       </div>
 
+      {/* Validated temporal-KG findings lead, before the descriptive indicators. */}
+      <TemporalAnalysis data={temporalAnalysis} />
+
       {/* Structural patterns */}
       <div className="mt-12">
         <h3 className="font-display text-lg font-bold text-text-primary">Patterns in the record</h3>
@@ -257,8 +260,6 @@ export default function Analysis({ temporal, signals, predicted, graph, overlay,
           switched on in the legend.
         </p>
       </div>
-
-      <TemporalAnalysis data={temporalAnalysis} />
     </section>
   );
 }

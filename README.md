@@ -27,6 +27,19 @@ Every figure below is computed from the source data and reconciled across the si
 - **20** flood-control district offices are highly concentrated (Herfindahl-Hirschman Index above 2,500, the US DOJ threshold).
 - Sunwest, Inc. holds the highest recorded flood-control value at **₱32.83B**. Topnotch Catalyst Builders Inc. (the demo target) resolves to one node at **285 contracts / ₱17.41B**.
 
+## What the analysis found
+
+Read as a temporal knowledge graph: every award and joint venture carries its year, and every claim is tested against a null model. All figures are computed offline and reconciled; methods and limits are on the site's methodology page. These are statistical indicators, not findings of wrongdoing.
+
+- **The market closed as the money tripled.** Flood-control spending rose from **₱52.6B (2016) to a ₱368.1B peak (2024)**. Over the same run, the share won by firms entering flood control for the first time fell from **15.2% (2017) to 3.5% (2025)**, while the share held by the 16 firms later named in the inquiry rose from **5.3% to a 14.4% peak (2024)**.
+- **The contractor network consolidated into one web.** The largest connected group of the joint-venture network grew from **26 firms (2016) to 1,392 (2025)**. Co-location communities fell from **8 (2018) to 5 (2025)** while the largest grew from **59 to 158 firms**, and the yearly partition stabilized (adjusted Rand rising to **0.95**). The structure settled and merged; it did not churn.
+- **Structure predicts next year's partnerships.** On a strict chronological split, prior shared-office structure predicts which firms form a new joint venture the following year at a macro **ROC-AUC of 0.70** (0.76 in 2024). It beats a degree-preserving configuration-model null in **every split (p < 0.01)**, so the signal is the structure itself, not merely which firms are large. Predictions are statistical similarity, never evidence of a relationship.
+- **Partnerships tend to predate the money.** For firm pairs holding a recorded joint venture, the venture forms before the bulk of their shared awards **263 times, versus 66 the other way (about 4x)**. Sequence only, not intent.
+- **A structural break around 2020 to 2021.** Pettitt change-point tests place the shift in several series (the named firms' share steps from about **7% to 12% at 2020**). Marginal significance over a ten-year window, so a candidate turning point, not proof.
+- **Pattern indicators (OECD bid-rigging lens, descriptive).** **64** firm pairs with near-identical bidding footprints but no recorded joint venture (Jaccard ≥ 0.6, ≥ 4 shared offices); **14** joint-venture rings of 3 to 15 firms; **16** firms that first appeared in flood control in 2020 or later and won ≥ ₱1B within two years; and, tested and not found, **0** offices where two firms alternate the yearly top spot. Legitimate explanations include regional specialization, geography, and licence class.
+
+Methods: `scripts/build_temporal.py` (temporal link prediction, dynamic communities, Pettitt change-points, temporal motifs) and `scripts/build_analytics.py` (formation series, pattern indicators, Node2Vec prediction), all seeded with networkx, gensim, and scikit-learn.
+
 ## Confidence tiers
 
 An inferred link never looks like a recorded one.

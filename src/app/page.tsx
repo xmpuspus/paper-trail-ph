@@ -5,7 +5,7 @@ import StoryRail from "@/components/StoryRail";
 import Explorer from "@/components/Explorer";
 import Analysis from "@/components/Analysis";
 import Methodology from "@/components/Methodology";
-import { getStats, getScandalGraph, getOverlay, getInNews, getTemporal, getSignals, getPredicted, getTemporalAnalysis } from "@/lib/data";
+import { getStats, getScandalGraph, getOverlay, getInNews, getTemporal, getSignals, getPredicted, getTemporalAnalysis, getSec } from "@/lib/data";
 
 export default function Home() {
   const stats = getStats();
@@ -16,6 +16,7 @@ export default function Home() {
   const signals = getSignals();
   const predicted = getPredicted();
   const temporalAnalysis = getTemporalAnalysis();
+  const sec = getSec();
 
   return (
     <>
@@ -38,15 +39,15 @@ export default function Home() {
                 recorded joint ventures, the official actions on file, and the sources.
               </p>
             </div>
-            <Explorer scandalGraph={scandalGraph} overlay={overlay} inNews={inNews} stats={stats} predicted={predicted} />
+            <Explorer scandalGraph={scandalGraph} overlay={overlay} inNews={inNews} stats={stats} predicted={predicted} sec={sec} />
           </div>
 
           <div className="mt-16 md:mt-24">
-            <Analysis temporal={temporal} signals={signals} predicted={predicted} graph={scandalGraph} overlay={overlay} inNews={inNews} temporalAnalysis={temporalAnalysis} />
+            <Analysis temporal={temporal} signals={signals} predicted={predicted} graph={scandalGraph} overlay={overlay} inNews={inNews} temporalAnalysis={temporalAnalysis} sec={sec} />
           </div>
 
           <div className="mt-16 md:mt-24">
-            <Methodology stats={stats} overlay={overlay} />
+            <Methodology stats={stats} overlay={overlay} sec={sec} />
           </div>
         </div>
       </main>

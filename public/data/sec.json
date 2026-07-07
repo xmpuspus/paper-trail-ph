@@ -1,0 +1,212 @@
+{
+  "_meta": {
+    "purpose": "Recorded SEC corporate-registry facts for top flood-control contractors, transcribed from the primary General Information Sheets published by PCIJ. A recorded tier, kept separate from the Node2Vec predicted tier.",
+    "tier": "recorded (SEC GIS, via PCIJ)",
+    "obtainability_note": "Philippine SEC company data is not machine-readable in bulk: eSEARCH is a paid, authenticated document channel, automated scraping is not authorized under the Revised Corporation Code, and the SEC API Marketplace is subscription-gated. This layer is curated from the primary SEC documents PCIJ obtained and published, not scraped.",
+    "provenance": {
+      "label": "PCIJ: Records of flood-control contractors (SEC GIS and Articles of Incorporation)",
+      "url": "https://pcij.org/2025/08/30/flood-control-records/"
+    },
+    "compiled": "2026-07",
+    "count": 6,
+    "disclaimer": "Statistical indicators derived from public data. Patterns may have legitimate explanations.",
+    "presumption": "Charges and flags are allegations under the presumption of innocence. These are corporate-registry facts and structural indicators, not findings of wrongdoing about any person or firm."
+  },
+  "firms": {
+    "15906": {
+      "key": "15906",
+      "name": "Sunwest, Inc.",
+      "graph_label": "SUNWEST, INC",
+      "sec_reg_no": "I199700399",
+      "reg_year": 1997,
+      "company_type": "Stock corporation",
+      "paid_up_capital": 5562500000,
+      "capital_note": "Total paid-up capital per the 2025 SEC GIS. Sunwest is well capitalized; the contract-to-capital ratio is low.",
+      "registered_office": "Lidong, Sto. Domingo, Albay",
+      "region": "Region V (Bicol)",
+      "fc_value": 32831553009.47,
+      "fc_contracts": 263,
+      "president": null,
+      "family_control": null,
+      "officer_note": "Elizaldy \"Zaldy\" Co, the reported co-founder, is not among the officers listed on the 2025 GIS.",
+      "gis_url": "https://drive.google.com/file/d/1i8Y5zkYa7UinqOVeWAbPq-CR76h3vkmY/view",
+      "aoi_url": "https://drive.google.com/file/d/10SR-5iSmgjna2y0i__nOwWVx7t5hu56S/view",
+      "tier": "recorded_sec",
+      "contract_to_capital": 5.9
+    },
+    "23385": {
+      "key": "23385",
+      "name": "Hi-Tone Construction and Development Corporation",
+      "graph_label": "HI-TONE CONSTRUCTION & DEVELOPMENT CORP",
+      "sec_reg_no": "CS200726051",
+      "reg_year": 2007,
+      "company_type": "Stock corporation",
+      "paid_up_capital": null,
+      "capital_note": "Paid-up capital was not legible in the published GIS and is omitted rather than estimated.",
+      "registered_office": "Lidong, Sto. Domingo, Albay",
+      "region": "Region V (Bicol)",
+      "fc_value": 17238477867.2,
+      "fc_contracts": 210,
+      "president": null,
+      "family_control": null,
+      "officer_note": null,
+      "gis_url": "https://drive.google.com/file/d/1DgodTsIJIFOqlRPqS3l0NCqRMImq5Hma/view",
+      "aoi_url": "https://drive.google.com/file/d/1fXNrDdmcRXwJ6D5EvVLVaRv3YZCCsRBF/view",
+      "tier": "recorded_sec"
+    },
+    "34105": {
+      "key": "34105",
+      "name": "Centerways Construction and Development Inc.",
+      "graph_label": "CENTERWAYS CONSTRUCTION AND DEVELOPMENT INC",
+      "sec_reg_no": "CS200926069",
+      "reg_year": 2009,
+      "company_type": "Stock corporation",
+      "paid_up_capital": 45000000,
+      "capital_note": "Total paid-up capital per the 2025 SEC GIS. Reported at about ₱1.25M at incorporation and later increased (Daily Tribune, Rappler).",
+      "registered_office": "Sitio Sip-ac, Cabid-an, Sorsogon City",
+      "region": "Region V (Bicol)",
+      "fc_value": 11970750975.85,
+      "fc_contracts": 148,
+      "president": "Lawrence R. Lubiano",
+      "family_control": "Family-held: three Lubiano directors on the 2025 GIS (Lawrence R., Cynthia R., Lemuel R. Lubiano).",
+      "officer_note": null,
+      "gis_url": "https://drive.google.com/file/d/1X2oXDsCjjNxkMSqCwfGxIZlGylEPNx1d/view",
+      "aoi_url": "https://drive.google.com/file/d/1KA1T297aUyE_fs1pYfjaDAtg7RCEmwor/view",
+      "tier": "recorded_sec",
+      "contract_to_capital": 266.0
+    },
+    "22465": {
+      "key": "22465",
+      "name": "Legacy Construction Corporation",
+      "graph_label": "LEGACY CONSTRUCTION CORPORATION",
+      "sec_reg_no": "CS201615002",
+      "reg_year": 2016,
+      "company_type": "Stock corporation",
+      "paid_up_capital": 380000000,
+      "capital_note": "Total paid-up capital per the 2025 SEC GIS.",
+      "registered_office": "1001 10th Flr, Tektite Tower, West Exchange Rd, San Antonio, Pasig City",
+      "region": "NCR",
+      "fc_value": 25718699130.53,
+      "fc_contracts": 345,
+      "president": "Alex H. Abelido",
+      "family_control": "Family-held: Alex H. Abelido (president) and Raymond H. Abelido (vice-president) on the 2025 GIS.",
+      "officer_note": null,
+      "gis_url": "https://drive.google.com/file/d/16nkKZVa4X2YMri97iGvdjV7uoPYRH5dq/view",
+      "aoi_url": "https://drive.google.com/file/d/1gBTwNRAVHYLqo-p--0xWWZ50xj1F_LID/view",
+      "tier": "recorded_sec",
+      "contract_to_capital": 67.7
+    },
+    "33234": {
+      "key": "33234",
+      "name": "M.G. Samidan Construction and Development Corporation",
+      "graph_label": "MG SAMIDAN CONSTRUCTION",
+      "sec_reg_no": "CS201903662",
+      "reg_year": 2019,
+      "company_type": "Stock corporation",
+      "paid_up_capital": 250000,
+      "capital_note": "Total paid-up capital per the 2025 SEC GIS. Corroborates the ₱250,000-capital figure first reported by the Inquirer.",
+      "registered_office": "M.G. Samidan Compound, Km 100, Sinto, Bauko, Mountain Province",
+      "region": "CAR",
+      "fc_value": 14596617520.72,
+      "fc_contracts": 147,
+      "president": "Marjorie Samidan",
+      "family_control": "Family-held: the four incorporators are all Samidan (Marjorie, Kliff, Kevin, Kamille).",
+      "officer_note": null,
+      "gis_url": "https://drive.google.com/file/d/1xGDco4Zh5Y_7IBueRFjiy36NDQnEDGtc/view",
+      "aoi_url": null,
+      "tier": "recorded_sec",
+      "contract_to_capital": 58386.5
+    },
+    "46535": {
+      "key": "46535",
+      "name": "Wawao Builders Corporation",
+      "graph_label": "WAWAO BUILDERS",
+      "sec_reg_no": "2025040198133-04",
+      "reg_year": 2025,
+      "company_type": "Stock corporation",
+      "paid_up_capital": 50000000,
+      "capital_note": "Paid-up capital of the corporation registered with the SEC in 2025. The DPWH flood-control contracts were awarded to the earlier Wawao Builders, so this capital is not compared to those contracts.",
+      "registered_office": "Rizal St, Brgy. Poblacion I, San Jose, Occidental Mindoro",
+      "region": "MIMAROPA (Region IV-B)",
+      "fc_value": 8402927494.73,
+      "fc_contracts": 119,
+      "president": null,
+      "family_control": null,
+      "officer_note": null,
+      "gis_url": "https://drive.google.com/file/d/1okskHvdqbgrsYhMHdNwE699a_rCO8cn5/view",
+      "aoi_url": null,
+      "tier": "recorded_sec",
+      "re_registration": {
+        "label": "A corporation named Wawao Builders Corporation was registered with the SEC in 2025 (registration number encodes 2025), after the DPWH ordered the perpetual disqualification of Wawao Builders for ghost flood-control projects in September 2025. The registration date is from the firm's own GIS; the disqualification is on the DPWH order.",
+        "source": "wawao_mt"
+      }
+    }
+  },
+  "findings": {
+    "contract_to_capital": {
+      "definition": "Ratio of a firm's total flood-control contract value on the DPWH record to its paid-up capital per its 2025 SEC GIS. Contract totals span 2021 to 2025; paid-up capital is the latest 2025 figure, which for firms that raised capital over time is the most conservative denominator. A statistical indicator only.",
+      "items": [
+        {
+          "key": "33234",
+          "name": "M.G. Samidan Construction and Development Corporation",
+          "fc_value": 14596617520.72,
+          "paid_up_capital": 250000,
+          "ratio": 58386.5,
+          "note": "Total paid-up capital per the 2025 SEC GIS. Corroborates the ₱250,000-capital figure first reported by the Inquirer."
+        },
+        {
+          "key": "34105",
+          "name": "Centerways Construction and Development Inc.",
+          "fc_value": 11970750975.85,
+          "paid_up_capital": 45000000,
+          "ratio": 266.0,
+          "note": "Total paid-up capital per the 2025 SEC GIS. Reported at about ₱1.25M at incorporation and later increased (Daily Tribune, Rappler)."
+        },
+        {
+          "key": "22465",
+          "name": "Legacy Construction Corporation",
+          "fc_value": 25718699130.53,
+          "paid_up_capital": 380000000,
+          "ratio": 67.7,
+          "note": "Total paid-up capital per the 2025 SEC GIS."
+        },
+        {
+          "key": "15906",
+          "name": "Sunwest, Inc.",
+          "fc_value": 32831553009.47,
+          "paid_up_capital": 5562500000,
+          "ratio": 5.9,
+          "note": "Total paid-up capital per the 2025 SEC GIS. Sunwest is well capitalized; the contract-to-capital ratio is low."
+        }
+      ]
+    },
+    "co_location": {
+      "definition": "Recorded firms whose registered principal office is in the same barangay/municipality per their 2025 SEC GIS.",
+      "items": [
+        {
+          "locality": "Lidong, Sto. Domingo, Albay",
+          "keys": [
+            "15906",
+            "23385"
+          ],
+          "firms": [
+            "Sunwest, Inc.",
+            "Hi-Tone Construction and Development Corporation"
+          ],
+          "note": "Registered principal office in the same barangay/municipality per their 2025 SEC GIS. A recorded co-location indicator, not evidence of a shared operation."
+        }
+      ]
+    },
+    "re_registration": {
+      "definition": "A firm registered with the SEC after a recorded blacklist or revocation, per the registration date on its own GIS.",
+      "items": [
+        {
+          "key": "46535",
+          "name": "Wawao Builders Corporation",
+          "label": "A corporation named Wawao Builders Corporation was registered with the SEC in 2025 (registration number encodes 2025), after the DPWH ordered the perpetual disqualification of Wawao Builders for ghost flood-control projects in September 2025. The registration date is from the firm's own GIS; the disqualification is on the DPWH order.",
+          "source": "wawao_mt"
+        }
+      ]
+    }
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { X, ArrowSquareOut, Info } from "@phosphor-icons/react";
-import type { Entity, Overlay, InNews, OverlayPerson, PredictedTies } from "@/lib/types";
+import type { Entity, Overlay, InNews, OverlayPerson, PredictedTies, SecData } from "@/lib/types";
 import { ACTION_META } from "@/lib/tiers";
 import { peso, pesoFull, num, shortDate } from "@/lib/format";
 
@@ -17,16 +17,18 @@ interface Props {
   overlay: Overlay | null;
   inNews: InNews | null;
   predicted?: PredictedTies | null;
+  sec?: SecData | null;
   resolveName?: (key: string) => string | undefined;
   onClose: () => void;
   onSelectRelated: (key: string) => void;
 }
 
-export default function EntityDetail({ entity, overlay, inNews, predicted, resolveName, onClose, onSelectRelated }: Props) {
+export default function EntityDetail({ entity, overlay, inNews, predicted, sec, resolveName, onClose, onSelectRelated }: Props) {
   if (!entity) return null;
   const isFirm = entity.type === "Contractor";
   const isPerson = entity.type === "Person";
   const ov = isFirm ? overlay?.firms?.[entity.key] : undefined;
+  const secFirm = isFirm ? sec?.firms?.[entity.key] : undefined;
   const news = isFirm ? inNews?.firms?.[entity.key] : undefined;
   const persons: OverlayPerson[] =
     isFirm && overlay ? overlay.persons.filter((p) => p.firms.includes(entity.key)) : [];
@@ -49,6 +51,7 @@ export default function EntityDetail({ entity, overlay, inNews, predicted, resol
           )}
           <div className="mt-2 flex flex-wrap gap-1.5">
             {entity.revoked && <span className="chip chip-signal">DPWH license recorded as revoked</span>}
+            {secFirm && <span className="chip">SEC on record</span>}
             {news && <span className="chip chip-water">In the news</span>}
             {entity.concentrated && <span className="chip chip-signal">Concentrated market (HHI &gt; 2500)</span>}
           </div>
@@ -123,6 +126,79 @@ export default function EntityDetail({ entity, overlay, inNews, predicted, resol
             Descriptive statistics from public records. Patterns may have legitimate explanations.
           </p>
         </Section>
+        )}
+
+        {/* Corporate registry (SEC): primary-document facts, recorded tier */}
+        {isFirm && secFirm && (
+          <Section
+            title="Corporate registry (SEC)"
+            hint="From the firm's own General Information Sheet, published by PCIJ. A recorded fact, not a scrape."
+          >
+            <dl className="grid grid-cols-2 gap-3">
+              <Metric label="SEC registration" value={secFirm.sec_reg_no} sub={`registered ${secFirm.reg_year}`} />
+              <Metric
+                label="Paid-up capital"
+                value={secFirm.paid_up_capital != null ? pesoFull(secFirm.paid_up_capital) : "—"}
+                title={secFirm.paid_up_capital != null ? pesoFull(secFirm.paid_up_capital) : undefined}
+              />
+              {secFirm.contract_to_capital != null && (
+                <Metric
+                  label="Flood-control value : capital"
+                  value={`${secFirm.contract_to_capital.toLocaleString()}x`}
+                  tone="signal"
+                />
+              )}
+              <Metric label="Registered office" value={secFirm.registered_office} sub={secFirm.region} />
+            </dl>
+            {secFirm.contract_to_capital != null && (
+              <p className="mt-2 text-[11px] leading-relaxed text-text-muted">
+                {peso(secFirm.fc_value)} in flood-control contract value on the DPWH record against{" "}
+                {pesoFull(secFirm.paid_up_capital as number)} paid-up capital on the 2025 GIS. A statistical
+                indicator, not evidence of wrongdoing.
+              </p>
+            )}
+            {secFirm.capital_note && (
+              <p className="mt-2 text-[11px] leading-relaxed text-text-muted">{secFirm.capital_note}</p>
+            )}
+            {(secFirm.president || secFirm.family_control) && (
+              <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">
+                {secFirm.president && <><span className="text-text-muted">President: </span>{secFirm.president}. </>}
+                {secFirm.family_control}
+              </p>
+            )}
+            {secFirm.officer_note && (
+              <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">{secFirm.officer_note}</p>
+            )}
+            {secFirm.re_registration && (
+              <div className="mt-3 rounded-lg border border-signal/40 p-3">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="chip chip-signal">Re-registration flag</span>
+                </div>
+                <p className="text-sm leading-relaxed text-text-secondary">{secFirm.re_registration.label}</p>
+                {source(secFirm.re_registration.source) && (
+                  <a
+                    href={source(secFirm.re_registration.source)!.url}
+                    target="_blank" rel="noopener noreferrer"
+                    className="link-source mt-1.5 inline-flex items-center gap-1 text-xs"
+                  >
+                    {source(secFirm.re_registration.source)!.label} <ArrowSquareOut size={12} />
+                  </a>
+                )}
+              </div>
+            )}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {secFirm.gis_url && (
+                <a href={secFirm.gis_url} target="_blank" rel="noopener noreferrer" className="link-source inline-flex items-center gap-1 text-xs">
+                  SEC GIS (PCIJ) <ArrowSquareOut size={11} />
+                </a>
+              )}
+              {secFirm.aoi_url && (
+                <a href={secFirm.aoi_url} target="_blank" rel="noopener noreferrer" className="link-source inline-flex items-center gap-1 text-xs">
+                  Articles of Incorporation <ArrowSquareOut size={11} />
+                </a>
+              )}
+            </div>
+          </Section>
         )}
 
         {/* Recorded footprint: where the money went */}

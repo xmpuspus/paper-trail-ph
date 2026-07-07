@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Graph, Table, ArrowsOut, CircleNotch } from "@phosphor-icons/react";
-import type { GraphData, Entity, Overlay, InNews, Stats, PredictedTies } from "@/lib/types";
+import type { GraphData, Entity, Overlay, InNews, Stats, PredictedTies, SecData } from "@/lib/types";
 import { fetchEntities, fetchMainGraph } from "@/lib/client-data";
 import { peso } from "@/lib/format";
 import type { ColorBy } from "@/components/graph/GraphView";
@@ -27,11 +27,12 @@ interface Props {
   inNews: InNews;
   stats: Stats;
   predicted?: PredictedTies | null;
+  sec?: SecData | null;
 }
 
 const QUICK = ["Topnotch", "Sunwest", "Legacy", "St. Gerrard", "MG Samidan", "Wawao"];
 
-export default function Explorer({ scandalGraph, overlay, inNews, stats, predicted }: Props) {
+export default function Explorer({ scandalGraph, overlay, inNews, stats, predicted, sec }: Props) {
   const [entities, setEntities] = useState<Entity[] | null>(null);
   const [entityMap, setEntityMap] = useState<Map<string, Entity>>(new Map());
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
@@ -179,6 +180,7 @@ export default function Explorer({ scandalGraph, overlay, inNews, stats, predict
               overlay={overlay}
               inNews={inNews}
               predicted={predicted ?? null}
+              sec={sec ?? null}
               resolveName={(k) => entityMap.get(k)?.label}
               onClose={() => setSelectedKey(null)}
               onSelectRelated={(k) => setSelectedKey(k)}

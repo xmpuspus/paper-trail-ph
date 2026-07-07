@@ -1,5 +1,6 @@
-import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews, TemporalAnalysis as TAData } from "@/lib/types";
-import { peso } from "@/lib/format";
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
+import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews, TemporalAnalysis as TAData, SecData } from "@/lib/types";
+import { peso, pesoFull } from "@/lib/format";
 import GraphTimeline from "@/components/graph/GraphTimeline";
 import TemporalAnalysis from "@/components/TemporalAnalysis";
 
@@ -16,6 +17,7 @@ interface Props {
   overlay: Overlay;
   inNews: InNews;
   temporalAnalysis: TAData;
+  sec: SecData;
 }
 
 const W = 260;
@@ -90,7 +92,7 @@ function BarChart({
   );
 }
 
-export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews, temporalAnalysis }: Props) {
+export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews, temporalAnalysis, sec }: Props) {
   const ys = temporal.years;
   const years = ys.map((y) => y.year);
   const first = ys[0];
@@ -227,6 +229,68 @@ export default function Analysis({ temporal, signals, predicted, graph, overlay,
             </ul>
           </SignalCard>
         </div>
+      </div>
+
+      {/* Corporate registry (SEC): recorded tier, primary documents */}
+      <div className="mt-12">
+        <h3 className="font-display text-lg font-bold text-text-primary">Corporate registry (SEC)</h3>
+        <p className="mt-1.5 max-w-3xl text-[13px] leading-relaxed text-text-muted">
+          {sec._meta.obtainability_note} Provenance:{" "}
+          <a href={sec._meta.provenance.url} target="_blank" rel="noopener noreferrer" className="link-source inline-flex items-center gap-1">
+            {sec._meta.provenance.label} <ArrowSquareOut size={11} />
+          </a>
+        </p>
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-hairline">
+          <table className="w-full border-collapse text-sm">
+            <caption className="px-3 pt-3 text-left text-[12px] leading-relaxed text-text-muted">
+              {sec.findings.contract_to_capital.definition}
+            </caption>
+            <thead>
+              <tr className="border-b border-hairline text-left text-[11px] uppercase tracking-wide text-text-muted">
+                <th className="px-3 py-2">Firm</th>
+                <th className="px-3 py-2 text-right">Paid-up capital</th>
+                <th className="px-3 py-2 text-right">Flood-control value</th>
+                <th className="px-3 py-2 text-right" title="Flood-control contract value on record, divided by paid-up capital">Value : capital</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sec.findings.contract_to_capital.items.map((r, i) => (
+                <tr key={i} className="border-b border-hairline/60 last:border-b-0">
+                  <td className="px-3 py-1.5 text-text-secondary">{r.name}</td>
+                  <td className="tabular px-3 py-1.5 text-right text-text-muted" title={pesoFull(r.paid_up_capital)}>{pesoFull(r.paid_up_capital)}</td>
+                  <td className="tabular px-3 py-1.5 text-right text-text-muted">{peso(r.fc_value)}</td>
+                  <td className="tabular px-3 py-1.5 text-right font-semibold" style={{ color: "var(--signal)" }}>{r.ratio.toLocaleString()}x</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {sec.findings.co_location.items.map((c, i) => (
+            <div key={`col-${i}`} className="min-w-0 rounded-xl border border-hairline bg-surface p-4">
+              <h4 className="font-display text-[15px] font-semibold text-text-primary">Shared registered office</h4>
+              <p className="mt-1 text-sm text-text-secondary">
+                {c.firms.join(" and ")} register their principal office in the same locality: {c.locality}.
+              </p>
+              <p className="mt-2 text-[12px] leading-relaxed text-text-muted">{c.note}</p>
+            </div>
+          ))}
+          {sec.findings.re_registration.items.map((r, i) => (
+            <div key={`rereg-${i}`} className="min-w-0 rounded-xl border border-signal/40 bg-surface p-4">
+              <h4 className="font-display text-[15px] font-semibold text-text-primary">Re-registration after a ban</h4>
+              <p className="mt-1 text-sm text-text-secondary">{r.label}</p>
+              {overlay.sources?.[r.source] && (
+                <a href={overlay.sources[r.source].url} target="_blank" rel="noopener noreferrer" className="link-source mt-2 inline-flex items-center gap-1 text-xs">
+                  {overlay.sources[r.source].label} <ArrowSquareOut size={11} />
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-3 max-w-3xl text-[12px] leading-relaxed text-text-muted">{sec._meta.presumption}</p>
       </div>
 
       {/* Predicted ties */}

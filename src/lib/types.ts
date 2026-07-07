@@ -146,6 +146,51 @@ export interface PredictedTies {
   pairs: PredictedPair[];
 }
 
+// ---- Recorded SEC corporate-registry layer (scripts/build_sec.py) ----
+
+export interface SecFirm {
+  key: string;
+  name: string;
+  graph_label?: string;
+  sec_reg_no: string;
+  reg_year: number;
+  company_type: string;
+  paid_up_capital: number | null;
+  capital_note?: string;
+  registered_office: string;
+  region: string;
+  fc_value: number;
+  fc_contracts?: number;
+  president?: string;
+  family_control?: string;
+  officer_note?: string;
+  gis_url?: string | null;
+  aoi_url?: string | null;
+  tier: "recorded_sec";
+  contract_to_capital?: number;
+  re_registration?: { label: string; source: string };
+}
+
+export interface SecRatioItem {
+  key: string; name: string; fc_value: number; paid_up_capital: number; ratio: number; note?: string;
+}
+export interface SecCoLocation { locality: string; keys: string[]; firms: string[]; note: string }
+export interface SecReReg { key: string; name: string; label: string; source: string }
+
+export interface SecData {
+  _meta: {
+    purpose: string; tier: string; obtainability_note: string;
+    provenance: { label: string; url: string };
+    compiled: string; count: number; disclaimer: string; presumption: string;
+  };
+  firms: Record<string, SecFirm>;
+  findings: {
+    contract_to_capital: { definition: string; items: SecRatioItem[] };
+    co_location: { definition: string; items: SecCoLocation[] };
+    re_registration: { definition: string; items: SecReReg[] };
+  };
+}
+
 // ---- Temporal knowledge-graph analytics (scripts/build_temporal.py) ----
 
 export interface TemporalAnalysis {

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { Stats, GraphData, Overlay, InNews, TemporalData, SignalsData, PredictedTies, TemporalAnalysis } from "./types";
+import type { Stats, GraphData, Overlay, InNews, TemporalData, SignalsData, PredictedTies, TemporalAnalysis, SecData } from "./types";
 
 // Build-time readers: the page is a server component, so these bake the small
 // JSON straight into the static HTML (instant first paint, no fetch, no CLS).
@@ -37,4 +37,7 @@ export function getPredicted(): PredictedTies {
 }
 export function getTemporalAnalysis(): TemporalAnalysis {
   return readJson<TemporalAnalysis>("temporal-analysis.json");
+}
+export function getSec(): SecData {
+  return readJson<SecData>("sec.json");
 }

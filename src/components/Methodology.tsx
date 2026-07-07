@@ -1,8 +1,8 @@
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
-import type { Stats, Overlay } from "@/lib/types";
+import type { Stats, Overlay, SecData } from "@/lib/types";
 import { peso, num } from "@/lib/format";
 
-export default function Methodology({ stats, overlay }: { stats: Stats; overlay: Overlay }) {
+export default function Methodology({ stats, overlay, sec }: { stats: Stats; overlay: Overlay; sec: SecData }) {
   return (
     <section id="methodology" className="scroll-mt-20">
       <div className="mb-6">
@@ -54,11 +54,26 @@ export default function Methodology({ stats, overlay }: { stats: Stats; overlay:
         <Card title="Confidence tiers">
           <p>An inferred link never looks like a recorded one.</p>
           <ul>
-            <li><strong>Recorded</strong> (solid line): a contract award, joint venture, revoked license, blacklist, court filing, or a source-linked person, with a source.</li>
+            <li><strong>Recorded</strong> (solid line): a contract award, joint venture, revoked license, blacklist, court filing, a source-linked person, or an SEC corporate-registry fact from a firm&apos;s own General Information Sheet, with a source.</li>
             <li><strong>Inferred from records</strong> (curved, lighter): not stated but computed, such as two firms that are both top awardees in the same district offices.</li>
             <li><strong>Predicted</strong> (faintest, off by default): a Node2Vec statistical similarity in bidding footprint between firms with no recorded joint venture. Not evidence of a relationship, and unverified against any registry.</li>
             <li><strong>Possible namesake</strong>: a shared surname is not a relationship. Not shown in this release; reserved for a future human-verified layer.</li>
           </ul>
+        </Card>
+
+        <Card title="SEC corporate registry">
+          <p>
+            Philippine SEC company data is not machine-readable in bulk: eSEARCH is a paid, authenticated document
+            channel, automated scraping is not authorized under the Revised Corporation Code, and the SEC API
+            Marketplace is subscription-gated. So this layer is not scraped. It curates the primary SEC documents,{" "}
+            General Information Sheets and Articles of Incorporation, that PCIJ obtained and published for{" "}
+            {sec._meta.count} of the top flood-control contractors{" "}
+            <Src url={sec._meta.provenance.url} label="PCIJ: Records of flood-control contractors" />. Each figure
+            (registration number, paid-up capital, registered office) is transcribed from the firm&apos;s own GIS and
+            links back to that document. The contract-to-capital ratio is then computed from that paid-up capital and
+            the flood-control value already on the DPWH record, so the numbers reconcile. Where a figure was not legible
+            in the published document, it is omitted, not estimated.
+          </p>
         </Card>
 
         <Card title="The numbers">

@@ -67,7 +67,7 @@ export const STATUS: Record<StatusKey, StatusStyle> = {
 };
 
 const ALLEGED = new Set([
-  "charged_pending", "flagged_review", "lookout_order",
+  "charged_pending", "flagged_review", "lookout_order", "coa_fraud_audit",
   "amlc_freeze", "under_investigation", "capitalization_flag", "performance_flag",
 ]);
 const ACTION = new Set(["license_revoked", "blacklisted", "sec_cancelled"]);
@@ -98,6 +98,7 @@ export const ACTION_META: Record<string, { label: string; tone: ActionTone }> = 
   blacklisted: { label: "Blacklisted", tone: "action" },
   charged_pending: { label: "Charged (case pending)", tone: "alleged" },
   flagged_review: { label: "Flagged in audit", tone: "alleged" },
+  coa_fraud_audit: { label: "COA Fraud Audit Report", tone: "alleged" },
   lookout_order: { label: "Immigration lookout order", tone: "alleged" },
   amlc_freeze: { label: "Assets frozen (AMLC)", tone: "alleged" },
   under_investigation: { label: "Under investigation", tone: "alleged" },

@@ -57,7 +57,7 @@ The **SEC corporate-registry layer** (`public/data/sec.json`) is a separate reco
 ## Data sources
 
 - **DPWH contracts:** DPWH Transparency Portal via BetterGov.PH, published on HuggingFace as [`bettergovph/dpwh-transparency-data`](https://huggingface.co/datasets/bettergovph/dpwh-transparency-data). License CC0 1.0 Universal (public domain).
-- **Official actions:** compiled and source-linked from PCAB, the Ombudsman and Sandiganbayan, DPWH, COA, and SEC.
+- **Official actions:** compiled and source-linked from PCAB, the Ombudsman and Sandiganbayan, DPWH, COA, and SEC. COA Fraud Audit Reports on the Bulacan flood-control projects (ghost projects, unauthorized relocation, payments for pre-existing structures) are attached to the contractors named (Wawao Builders, SYMS Construction, Topnotch) and to the procuring DPWH Bulacan 1st District Engineering Office, each with the specific project and amount.
 - **SEC corporate records:** primary General Information Sheets and Articles of Incorporation for the top contractors, from the document set [PCIJ](https://pcij.org/2025/08/30/flood-control-records/) obtained and published. Transcribed per firm, each figure linking its source document.
 - **News tagging:** recent coverage (GDELT plus PH outlets) matched by exact firm name to the verified scandal set, each linking its source article.
 

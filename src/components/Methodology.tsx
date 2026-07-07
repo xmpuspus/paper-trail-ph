@@ -30,7 +30,8 @@ export default function Methodology({ stats, overlay, sec }: { stats: Stats; ove
             </li>
             <li>
               <strong>Official actions.</strong> Curated and source-linked: PCAB Board Resolution 075, Ombudsman and
-              Sandiganbayan filings, DPWH Secretary orders, COA fraud audit reports, SEC resolutions.
+              Sandiganbayan filings, DPWH Secretary orders, COA Fraud Audit Reports (attached to the contractors and
+              the procuring district office they name, with the specific project, amount, and finding), SEC resolutions.
             </li>
             <li>
               <strong>News tagging.</strong> Recent coverage matched by exact firm name to the firms named in the flood-control reporting, each

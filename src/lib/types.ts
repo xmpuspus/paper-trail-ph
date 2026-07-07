@@ -247,6 +247,7 @@ export interface Stats {
 export interface OverlaySource { label: string; url: string; type: string; date: string }
 export interface OverlayAction { type: string; label: string; status: string; date: string; source: string }
 export interface OverlayFirm { owner?: string; actions: OverlayAction[] }
+export interface OverlayOffice { label?: string; actions: OverlayAction[] }
 export interface OverlayPerson { id: string; name: string; role: string; firms: string[]; status: string; sources: string[] }
 export interface Overlay {
   _meta: { purpose: string; compiled: string; disclaimer: string; verification_note: string };
@@ -255,6 +256,7 @@ export interface Overlay {
   context: { top15_note: string; top15_source: string };
   persons: OverlayPerson[];
   firms: Record<string, OverlayFirm>;
+  offices?: Record<string, OverlayOffice>;
 }
 
 export interface InNewsEntry { headline: string; source: string; url: string; date: string; articles: number }

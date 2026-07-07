@@ -28,6 +28,7 @@ export default function EntityDetail({ entity, overlay, inNews, predicted, sec, 
   const isFirm = entity.type === "Contractor";
   const isPerson = entity.type === "Person";
   const ov = isFirm ? overlay?.firms?.[entity.key] : undefined;
+  const ovOffice = entity.type === "ProcuringEntity" ? overlay?.offices?.[entity.key] : undefined;
   const secFirm = isFirm ? sec?.firms?.[entity.key] : undefined;
   const news = isFirm ? inNews?.firms?.[entity.key] : undefined;
   const persons: OverlayPerson[] =
@@ -126,6 +127,37 @@ export default function EntityDetail({ entity, overlay, inNews, predicted, sec, 
             Descriptive statistics from public records. Patterns may have legitimate explanations.
           </p>
         </Section>
+        )}
+
+        {/* Procuring office: curated, source-linked findings (COA fraud audits) */}
+        {ovOffice && ovOffice.actions.length > 0 && (
+          <Section title="On the record">
+            <ul className="space-y-3">
+              {ovOffice.actions.map((a, i) => {
+                const meta = ACTION_META[a.type];
+                const src = source(a.source);
+                const t = TONE[meta?.tone ?? "note"];
+                return (
+                  <li key={i} className={`rounded-lg border p-3 ${t.border}`}>
+                    <div className="mb-1 flex items-center gap-2">
+                      <span className={`chip ${t.chip}`}>{meta?.label ?? a.type}</span>
+                      <span className="text-[11px] text-text-muted">{shortDate(a.date)}</span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-text-secondary">{a.label}</p>
+                    {src && (
+                      <a href={src.url} target="_blank" rel="noopener noreferrer" className="link-source mt-1.5 inline-flex items-center gap-1 text-xs">
+                        {src.label} <ArrowSquareOut size={12} />
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-relaxed text-text-muted">
+              <Info size={13} className="mt-0.5 shrink-0" />
+              Audit findings are allegations under the presumption of innocence. Cases are pending unless a court has ruled otherwise.
+            </p>
+          </Section>
         )}
 
         {/* Corporate registry (SEC): primary-document facts, recorded tier */}

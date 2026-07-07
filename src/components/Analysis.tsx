@@ -1,5 +1,5 @@
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
-import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews, TemporalAnalysis as TAData, SecData } from "@/lib/types";
+import type { TemporalData, SignalsData, PredictedTies, GraphData, Overlay, InNews, TemporalAnalysis as TAData, SecData, GeographyData } from "@/lib/types";
 import { peso, pesoFull } from "@/lib/format";
 import GraphTimeline from "@/components/graph/GraphTimeline";
 import TemporalAnalysis from "@/components/TemporalAnalysis";
@@ -18,6 +18,7 @@ interface Props {
   inNews: InNews;
   temporalAnalysis: TAData;
   sec: SecData;
+  geography: GeographyData;
 }
 
 const W = 260;
@@ -92,7 +93,8 @@ function BarChart({
   );
 }
 
-export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews, temporalAnalysis, sec }: Props) {
+export default function Analysis({ temporal, signals, predicted, graph, overlay, inNews, temporalAnalysis, sec, geography }: Props) {
+  const geoMax = Math.max(...geography.by_region.map((r) => r.fc_value), 1);
   const ys = temporal.years;
   const years = ys.map((y) => y.year);
   const first = ys[0];
@@ -229,6 +231,29 @@ export default function Analysis({ temporal, signals, predicted, graph, overlay,
             </ul>
           </SignalCard>
         </div>
+      </div>
+
+      {/* Geographic jurisdiction: flood-control value by region */}
+      <div className="mt-12">
+        <h3 className="font-display text-lg font-bold text-text-primary">Where the flood-control money went, by region</h3>
+        <p className="mt-1.5 max-w-3xl text-[13px] leading-relaxed text-text-muted">{geography._meta.method_note}</p>
+        <div className="mt-4 space-y-1.5">
+          {geography.by_region.map((r) => (
+            <div key={r.region} className="flex items-center gap-3">
+              <span className="w-36 shrink-0 truncate text-[13px] text-text-secondary md:w-44" title={r.region}>{r.region}</span>
+              <div className="relative h-4 flex-1 overflow-hidden rounded bg-surface-2">
+                <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${(r.fc_value / geoMax) * 100}%`, background: "var(--accent)" }} />
+              </div>
+              <span className="tabular w-32 shrink-0 text-right text-[12px] text-text-muted">
+                {peso(r.fc_value)} · {r.share_pct}%
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 max-w-3xl text-[12px] leading-relaxed text-text-muted">
+          Flood-control contract value on the DPWH record, summed by the record&apos;s own region field across
+          {" "}{geography._meta.regions} regions ({peso(geography._meta.fc_total)} total). {geography._meta.disclaimer}
+        </p>
       </div>
 
       {/* Corporate registry (SEC): recorded tier, primary documents */}

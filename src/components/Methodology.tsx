@@ -1,8 +1,8 @@
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
-import type { Stats, Overlay, SecData } from "@/lib/types";
+import type { Stats, Overlay, SecData, GeographyData } from "@/lib/types";
 import { peso, num } from "@/lib/format";
 
-export default function Methodology({ stats, overlay, sec }: { stats: Stats; overlay: Overlay; sec: SecData }) {
+export default function Methodology({ stats, overlay, sec, geography }: { stats: Stats; overlay: Overlay; sec: SecData; geography: GeographyData }) {
   return (
     <section id="methodology" className="scroll-mt-20">
       <div className="mb-6">
@@ -74,6 +74,17 @@ export default function Methodology({ stats, overlay, sec }: { stats: Stats; ove
             links back to that document. The contract-to-capital ratio is then computed from that paid-up capital and
             the flood-control value already on the DPWH record, so the numbers reconcile. Where a figure was not legible
             in the published document, it is omitted, not estimated.
+          </p>
+        </Card>
+
+        <Card title="Geography and jurisdiction">
+          <p>
+            Flood-control value is mapped to jurisdictions using the DPWH record&apos;s own region field, summed across{" "}
+            {geography._meta.regions} regions ({peso(geography._meta.fc_total)} total, reconciling to the site figure).
+            Two joins are deferred, not faked: canonical PSGC province and municipality codes (the PSA publishes PSGC
+            only as manual downloads behind Cloudflare, so there is no automated join), and the Open Congress bill layer
+            (the documented BetterGov Open Congress API returned only a 404 page at every path this cycle). A
+            point-level project map is a natural next step; the record carries coordinates on most contracts.
           </p>
         </Card>
 

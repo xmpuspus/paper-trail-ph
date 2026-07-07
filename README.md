@@ -38,6 +38,7 @@ Read as a temporal knowledge graph: every award and joint venture carries its ye
 - **A structural break around 2020 to 2021.** Pettitt change-point tests place the shift in several series (the named firms' share steps from about **7% to 12% at 2020**). Marginal significance over a ten-year window, so a candidate turning point, not proof.
 - **Pattern indicators (OECD bid-rigging lens, descriptive).** **64** firm pairs with near-identical bidding footprints but no recorded joint venture (Jaccard ≥ 0.6, ≥ 4 shared offices); **14** joint-venture rings of 3 to 15 firms; **16** firms that first appeared in flood control in 2020 or later and won ≥ ₱1B within two years; and, tested and not found, **0** offices where two firms alternate the yearly top spot. Legitimate explanations include regional specialization, geography, and licence class.
 - **Contract value against paid-up capital, from the firms' own SEC filings.** For 6 of the top flood-control contractors, PCIJ published the primary SEC documents. Measured against the paid-up capital on each firm's own General Information Sheet, flood-control value on the DPWH record runs to about **58,000x for M.G. Samidan (₱250,000 capital), 266x for Centerways, and 68x for Legacy**, while Sunwest at about **6x** is well capitalized (the ratio is a statistical indicator, not a finding). Sunwest and Hi-Tone register their principal office in the same Albay locality, and a "Wawao Builders Corporation" was registered with the SEC in 2025, after the DPWH perpetually banned Wawao Builders for ghost projects in September 2025. Every figure links its source document.
+- **The money concentrates in Central Luzon.** Mapped by the DPWH record's own region field, Region III (Central Luzon) took the largest share of flood-control value, **₱267.1B (16.8% of ₱1.586T across 18 regions)**, ahead of NCR (₱157.9B, 10.0%) and Bicol / Region V (₱154.3B, 9.7%). Central Luzon holds the Bulacan district office at the centre of the COA fraud audits; Bicol holds the Sunwest, Centerways, and Hi-Tone cluster.
 
 Methods: `scripts/build_temporal.py` (temporal link prediction, dynamic communities, Pettitt change-points, temporal motifs) and `scripts/build_analytics.py` (formation series, pattern indicators, Node2Vec prediction), all seeded with networkx, gensim, and scikit-learn.
 
@@ -78,7 +79,8 @@ DPWH parquet ──▶ scripts/build_graph.py ──▶ public/data/*.json ─�
 - **Temporal knowledge-graph analytics** (`scripts/build_temporal.py`): the graph read as timestamped quads. Temporal link prediction on a rolling chronological split (predict next year's new joint ventures from prior shared-office structure; macro ROC-AUC ~0.70, beats a degree-preserving null every year at p < 0.01). Dynamic community detection (Louvain per year with adjusted-Rand stability). Pettitt change-point tests on each structural series. Temporal motifs (does a joint venture predate the pair's shared awards?). Plus a heterogeneous temporal schema (person/firm/office/institution nodes, typed dated edges) populated only from sourced records.
 - **Person layer:** the 8 people in the sourced overlay become graph nodes with recorded, source-linked edges to their firms. Curated, never scraped.
 - **SEC layer** (`scripts/build_sec.py`): the recorded corporate-registry facts, transcribed from the primary GIS documents PCIJ published, with the contract-to-capital ratio computed from that paid-up capital and the flood-control value in `graph-main.json` so the numbers reconcile.
-- **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `sec.json` (SEC corporate registry), `in_news.json` (news tags), `temporal.json`, `signals.json`, `predicted-ties.json`.
+- **Geography** (`scripts/build_geography.py`): flood-control value by region from the DPWH record's own region field, the jurisdiction breakdown, reconciled to the flood-control total.
+- **Baked outputs:** `stats.json`, `graph-scandal.json` (first paint), `graph-main.json` (full flood-control graph), `graph-topnotch.json` (demo ego network), `entities.json` (search index), `overlay.json` (sourced actions), `sec.json` (SEC corporate registry), `geography.json` (by-region jurisdiction), `in_news.json` (news tags), `temporal.json`, `signals.json`, `predicted-ties.json`.
 - **Frontend:** Next.js 14, Sigma.js v3 (WebGL). On mobile the graph degrades to a searchable table.
 
 ## Run locally
@@ -91,6 +93,7 @@ npm run dev            # http://localhost:3000
 python3 scripts/build_analytics.py   # temporal + signals + Node2Vec prediction
 python3 scripts/build_temporal.py    # temporal KG: link prediction, communities, change-points, motifs
 python3 scripts/build_sec.py         # SEC corporate registry + contract-to-capital ratios
+python3 scripts/build_geography.py   # flood-control value by region (jurisdiction)
 python3 scripts/build_graph.py       # graphs + search index (injects the above)
 ```
 
@@ -109,6 +112,6 @@ The interactive graph joining DPWH contracts, officials, court outcomes, and liv
 
 ## What is deferred
 
-Not faked but stated plainly: bulk SALN wealth and SOCE campaign-finance joins (neither is available as machine-readable public data today; the one campaign-finance link shown is individually sourced), the PhilGEPS cross-check, and the dynasty layer. The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the site yet.
+Not faked but stated plainly: bulk SALN wealth and SOCE campaign-finance joins (neither is available as machine-readable public data today; the one campaign-finance link shown is individually sourced), the PhilGEPS cross-check, and the dynasty layer. Two Phase 3 joins are deferred for a concrete reason: canonical PSGC province and municipality codes (the PSA publishes PSGC only as manual downloads behind Cloudflare, so jurisdiction uses the DPWH record's own region field instead), and the Open Congress bill layer (the documented BetterGov Open Congress API returned only a 404 page at every path tried this cycle). The PhilGEPS, Open Congress, and PSA collectors exist but are not part of the site yet.
 
 Not affiliated with any government agency.

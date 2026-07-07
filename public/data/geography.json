@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "purpose": "Flood-control contract value by region, computed from the DPWH transparency record's own location field. The jurisdiction breakdown of the money.",
+    "method_note": "Region is the DPWH record's location.region. Canonical PSGC province and municipality codes are not joined: the PSA publishes PSGC only as manual downloads behind Cloudflare, so there is no automated join. A point-level map is a natural next step; the record carries latitude and longitude on most contracts.",
+    "fc_total": 1586224208465.16,
+    "fc_contracts": 33866,
+    "regions": 18,
+    "unmapped_contracts": 0,
+    "disclaimer": "Statistical indicators derived from public data. Patterns may have legitimate explanations."
+  },
+  "by_region": [
+    {
+      "region": "Region III",
+      "fc_value": 267139538734.25,
+      "fc_contracts": 5393,
+      "share_pct": 16.8
+    },
+    {
+      "region": "National Capital Region",
+      "fc_value": 157851140842.88,
+      "fc_contracts": 3913,
+      "share_pct": 10.0
+    },
+    {
+      "region": "Region V",
+      "fc_value": 154277047914.44,
+      "fc_contracts": 2789,
+      "share_pct": 9.7
+    },
+    {
+      "region": "Region IV-A",
+      "fc_value": 132495659524.98,
+      "fc_contracts": 3435,
+      "share_pct": 8.4
+    },
+    {
+      "region": "Region I",
+      "fc_value": 108935708931.47,
+      "fc_contracts": 3488,
+      "share_pct": 6.9
+    },
+    {
+      "region": "Region IV-B",
+      "fc_value": 97916039121.37,
+      "fc_contracts": 1462,
+      "share_pct": 6.2
+    },
+    {
+      "region": "Region II",
+      "fc_value": 85430528000.56,
+      "fc_contracts": 1616,
+      "share_pct": 5.4
+    },
+    {
+      "region": "Region VII",
+      "fc_value": 76376478039.53,
+      "fc_contracts": 1552,
+      "share_pct": 4.8
+    },
+    {
+      "region": "Region VIII",
+      "fc_value": 76193741205.12,
+      "fc_contracts": 1911,
+      "share_pct": 4.8
+    },
+    {
+      "region": "Region XI",
+      "fc_value": 64321869536.46,
+      "fc_contracts": 1294,
+      "share_pct": 4.1
+    },
+    {
+      "region": "Region X",
+      "fc_value": 64123587236.84,
+      "fc_contracts": 1154,
+      "share_pct": 4.0
+    },
+    {
+      "region": "Region XIII",
+      "fc_value": 51983990753.38,
+      "fc_contracts": 854,
+      "share_pct": 3.3
+    },
+    {
+      "region": "Cordillera Administrative Region",
+      "fc_value": 48386099063.22,
+      "fc_contracts": 1240,
+      "share_pct": 3.1
+    },
+    {
+      "region": "Region VI",
+      "fc_value": 47976075038.38,
+      "fc_contracts": 1066,
+      "share_pct": 3.0
+    },
+    {
+      "region": "Central Office",
+      "fc_value": 43097065128.53,
+      "fc_contracts": 178,
+      "share_pct": 2.7
+    },
+    {
+      "region": "Negros Island Region",
+      "fc_value": 38600134475.47,
+      "fc_contracts": 943,
+      "share_pct": 2.4
+    },
+    {
+      "region": "Region XII",
+      "fc_value": 35872198246.49,
+      "fc_contracts": 808,
+      "share_pct": 2.3
+    },
+    {
+      "region": "Region IX",
+      "fc_value": 35247306671.79,
+      "fc_contracts": 770,
+      "share_pct": 2.2
+    }
+  ]
+}

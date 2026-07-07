@@ -191,6 +191,17 @@ export interface SecData {
   };
 }
 
+// ---- Geographic jurisdiction layer (scripts/build_geography.py) ----
+
+export interface GeoRegion { region: string; fc_value: number; fc_contracts: number; share_pct: number }
+export interface GeographyData {
+  _meta: {
+    purpose: string; method_note: string; fc_total: number; fc_contracts: number;
+    regions: number; unmapped_contracts: number; disclaimer: string;
+  };
+  by_region: GeoRegion[];
+}
+
 // ---- Temporal knowledge-graph analytics (scripts/build_temporal.py) ----
 
 export interface TemporalAnalysis {
